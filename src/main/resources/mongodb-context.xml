@@ -11,7 +11,7 @@
           http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">  
           
     <!-- 加载mongodb的属性配置文件 -->
-    <context:property-placeholder location="classpath:mongodb.properties" />
+    <context:property-placeholder location="classpath:mongodb.properties" ignore-unresolvable="true" />
     
     <!-- mongo对象 -->
     <mongo:mongo-client id="mongo" replica-set="${mongo.hostport}">
