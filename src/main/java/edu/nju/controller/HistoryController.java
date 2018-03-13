@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.nju.entities.BugHistory;
 import edu.nju.service.HistoryService;
 
 @Controller
-@RequestMapping(value = "/his")
+@RequestMapping(value = "/history")
 public class HistoryController {
 	
 	@Autowired
@@ -19,7 +18,7 @@ public class HistoryController {
 	
 	@RequestMapping(value = "/getList")
 	public void getList(HttpSession session, HttpServletResponse response) {
-		System.out.println(hisservice.insert(new BugHistory("1","1","1")));
+		
 	}
 	
 	@RequestMapping(value = "/getDetail")

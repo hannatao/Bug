@@ -1,8 +1,9 @@
 package edu.nju.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -10,16 +11,15 @@ public class BugHistory {
 	@Id
     private String id;
 	
-	@Indexed
-	private String bug_id;
-	
 	private String parent;
 	
+	private List<String> children;
+
 	@PersistenceConstructor
-	public BugHistory(String id, String bug_id, String parent) {
+	public BugHistory(String id, String parent, List<String> children) {
 		this.id = id;
-		this.bug_id = bug_id;
 		this.parent = parent;
+		this.children = children;
 	}
 
 	public String getId() {
@@ -30,14 +30,6 @@ public class BugHistory {
 		this.id = id;
 	}
 
-	public String getBug_id() {
-		return bug_id;
-	}
-
-	public void setBug_id(String bug_id) {
-		this.bug_id = bug_id;
-	}
-
 	public String getParent() {
 		return parent;
 	}
@@ -46,5 +38,11 @@ public class BugHistory {
 		this.parent = parent;
 	}
 	
-	
+	public List<String> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<String> children) {
+		this.children = children;
+	}
 }

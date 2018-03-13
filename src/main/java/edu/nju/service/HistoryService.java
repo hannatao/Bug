@@ -12,12 +12,8 @@ public class HistoryService {
 	@Autowired
 	BugHistoryDao historydao;
 	
-	public boolean insert(BugHistory history) {
-		try {
-			historydao.save(history);
-			return true;
-		}catch(Exception e) {
-			return false;
-		}
+	public boolean get(BugHistory history) {
+		return true;
 	}
+	
 }

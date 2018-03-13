@@ -22,23 +22,25 @@ public class BugMirror {
 	@Indexed
 	private int recurrent;
 
-	private String bug_id;
-	
 	private String title;
+	
+	private int good;
+
+	private int bad;
 	
 	private String img_url;
 	
 	@PersistenceConstructor
-	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String bug_id,
-			String title, String img_url) {
+	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, int good, int bad) {
 		this.id = id;
 		this.case_take_id = case_take_id;
 		this.bug_category = bug_category;
 		this.severity = severity;
 		this.recurrent = recurrent;
-		this.bug_id = bug_id;
 		this.title = title;
 		this.img_url = img_url;
+		this.bad = bad;
+		this.good = good;
 	}
 	
 	public String getId() {
@@ -81,14 +83,6 @@ public class BugMirror {
 		this.recurrent = recurrent;
 	}
 
-	public String getBug_id() {
-		return bug_id;
-	}
-
-	public void setBug_id(String bug_id) {
-		this.bug_id = bug_id;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -103,5 +97,21 @@ public class BugMirror {
 
 	public void setImg_url(String img_url) {
 		this.img_url = img_url;
+	}
+	
+	public int getGood() {
+		return good;
+	}
+
+	public void setGood(int good) {
+		this.good = good;
+	}
+
+	public int getBad() {
+		return bad;
+	}
+
+	public void setBad(int bad) {
+		this.bad = bad;
 	}
 }

@@ -1,7 +1,9 @@
 package edu.nju.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,18 +19,29 @@ public class RecommendController {
 	RecommendService recservice;
 	
 	@RequestMapping(value = "/getList")
-	public void getList(HttpSession session, HttpServletResponse response) {
-		
+	public void getList(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(recservice.recommend(case_take_id));
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@RequestMapping(value = "/getDetail")
-	public void getDetail(HttpSession session, HttpServletResponse response) {
-		
-	}
-	
-	@RequestMapping(value = "/submit")
-	public void submit(HttpSession session, HttpServletResponse response) {
-		
+	public void getDetail(String id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(recservice.getDetail(id));
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
