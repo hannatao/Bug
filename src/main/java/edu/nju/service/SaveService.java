@@ -39,4 +39,22 @@ public class SaveService {
 			return false;
 		}
 	}
+	
+	public boolean confirm(String id) {
+		try {
+			mirrordao.good(id);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean diss(String id) {
+		try {
+			mirrordao.bad(id);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
 }

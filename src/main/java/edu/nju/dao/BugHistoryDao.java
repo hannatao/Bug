@@ -1,7 +1,5 @@
 package edu.nju.dao;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -22,24 +20,24 @@ public class BugHistoryDao {
 		mongoOps.save(history);
 	}
 	
-	//根据bug_id删除文档
-	public void remove(String bug_id){
+	//根据id删除文档
+	public void remove(String id){
 	    Query query = new Query();
-	    query.addCriteria(Criteria.where("bug_id").is(bug_id));
+	    query.addCriteria(Criteria.where("_id").is(id));
 	    mongoOps.remove(query,BugHistory.class);
 	}
 	
-	//根据bug_id查找
-	public List<BugHistory> findParent(String bug_id){
+	//根据id查找
+	public BugHistory findParent(String id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("bug_id").is(bug_id));
-		return mongoOps.find(query, BugHistory.class);
+		query.addCriteria(Criteria.where("_id").is(id));
+		return mongoOps.find(query, BugHistory.class).get(0);
 	}
 	
 	//增加child
-	public void addChild(String bug_id, String child) {
+	public void addChild(String id, String child) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("bug_id").is(bug_id));
+		query.addCriteria(Criteria.where("_id").is(id));
 		BugHistory temp_hisroty = (BugHistory) mongoOps.find(query, BugHistory.class);
 		Update update = new Update();
 		update.set("children", temp_hisroty.getChildren().add(child));

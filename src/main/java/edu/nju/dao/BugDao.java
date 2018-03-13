@@ -30,7 +30,7 @@ public class BugDao {
 	//根据id删除文档
 	public void remove(String id){
 	    Query query = new Query();
-	    query.addCriteria(Criteria.where("id").is(id));
+	    query.addCriteria(Criteria.where("_id").is(id));
 	    mongoOperations.remove(query,Bug.class);
 	}
 	
@@ -44,10 +44,10 @@ public class BugDao {
 	}
 
 	//id查询，find查询所有
-	public List<Bug> findByid(String id){
+	public Bug findByid(String id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		return mongoOperations.find(query,Bug.class);
+		return mongoOperations.find(query,Bug.class).get(0);
 	}
 	
 	//case条件查询，find查询所有

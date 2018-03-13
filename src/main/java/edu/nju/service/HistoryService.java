@@ -12,7 +12,7 @@ public class HistoryService {
 	@Autowired
 	BugHistoryDao historydao;
 	
-	public boolean get(BugHistory history) {
+	public boolean getHistory(BugHistory history) {
 		return true;
 	}
 	

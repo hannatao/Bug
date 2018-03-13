@@ -27,6 +27,6 @@ public class RecommendService {
 	}
 	
 	public Bug getDetail (String id) {
-		return (Bug) bugdao.findByid(id);
+		return bugdao.findByid(id);
 	}
 }

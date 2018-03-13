@@ -21,9 +21,4 @@ public class HistoryController {
 		
 	}
 	
-	@RequestMapping(value = "/getDetail")
-	public void getDetail(HttpSession session, HttpServletResponse response) {
-		
-	}
-	
 }
