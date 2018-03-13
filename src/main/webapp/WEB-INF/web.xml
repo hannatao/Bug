@@ -38,7 +38,7 @@
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>
-                classpath:spring-mvc.xml
+                classpath:spring-mvc.xml,classpath:mongodb-context.xml
             </param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
