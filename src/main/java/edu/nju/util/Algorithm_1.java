@@ -14,7 +14,7 @@ public class Algorithm_1 implements Algorithm{
 		
 		lists.sort(new Comparator<BugMirror>() {
 			public int compare(BugMirror m1, BugMirror m2) {
-				return m2.getGood() - m1.getGood();
+				return m2.getGood().size() - m1.getGood().size();
 			}
 		});
 		for(int i = 0; i < results.size() && i < 3; i ++) {
@@ -28,7 +28,7 @@ public class Algorithm_1 implements Algorithm{
 		
 		lists.sort(new Comparator<BugMirror>() {
 			public int compare(BugMirror m1, BugMirror m2) {
-				return m2.getGood() - m1.getGood();
+				return m2.getGood().size() - m1.getGood().size();
 			}
 		});
 		for(int i = 0; i < results.size() && i < 3; i ++) {

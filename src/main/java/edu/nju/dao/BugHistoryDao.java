@@ -20,6 +20,13 @@ public class BugHistoryDao {
 		mongoOps.save(history);
 	}
 	
+	//id查询，find查询所有
+	public BugHistory findByid(String id){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		return mongoOps.find(query,BugHistory.class).get(0);
+	}
+	
 	//根据id删除文档
 	public void remove(String id){
 	    Query query = new Query();

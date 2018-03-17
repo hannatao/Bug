@@ -41,30 +41,42 @@ public class BugMirrorDao {
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<BugMirror> findBySeverity(String case_take_id, String severity){
+	public List<BugMirror> findBySeverity(String case_take_id, int severity){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<BugMirror> findByRecurrent(String case_take_id, String recurrent){
+	public List<BugMirror> findByRecurrent(String case_take_id, int recurrent){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public void good(String id) {
+	public boolean haveJudged(String id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		Update update = new Update();
-		update.set("good", mongoOperations.find(query, BugMirror.class).get(0).getGood() + 1);
+		BugMirror mirror = mongoOperations.find(query, BugMirror.class).get(0);
+		if(mirror.getGood().contains(report_id) || mirror.getBad().contains(report_id)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
-	public void bad(String id) {
+	public void good(String id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		Update update = new Update();
-		update.set("bad", mongoOperations.find(query, BugMirror.class).get(0).getBad() + 1);
+		update.set("good", mongoOperations.find(query, BugMirror.class).get(0).getGood().add(report_id));
+		mongoOperations.updateFirst(query,update,BugMirror.class);
+	}
+	
+	public void bad(String id, String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		Update update = new Update();
+		update.set("bad", mongoOperations.find(query, BugMirror.class).get(0).getBad().add(report_id));
 		mongoOperations.updateFirst(query,update,BugMirror.class);
 	}
 }

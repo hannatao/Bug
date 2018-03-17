@@ -12,8 +12,8 @@ public class HistoryService {
 	@Autowired
 	BugHistoryDao historydao;
 	
-	public boolean getHistory(BugHistory history) {
-		return true;
+	public BugHistory getHistory(String id) {
+		return historydao.findByid(id);
 	}
 	
 }

@@ -21,5 +21,6 @@
 	
     <!-- 导入mongodb的配置文件 -->
     <import resource="mongodb-context.xml"/>
+    <import resource="spring-redis.xml"/>
     <!--  <bean id="applicationContextUtil" class="com.junlenet.common.util.ApplicationContextUtil"></bean> -->
 </beans>

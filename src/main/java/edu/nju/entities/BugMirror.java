@@ -1,5 +1,7 @@
 package edu.nju.entities;
 
+import java.util.Set;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -24,14 +26,14 @@ public class BugMirror {
 
 	private String title;
 	
-	private int good;
+	private Set<String> good;
 
-	private int bad;
+	private Set<String> bad;
 	
 	private String img_url;
 	
 	@PersistenceConstructor
-	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, int good, int bad) {
+	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, Set<String> good, Set<String> bad) {
 		this.id = id;
 		this.case_take_id = case_take_id;
 		this.bug_category = bug_category;
@@ -99,19 +101,19 @@ public class BugMirror {
 		this.img_url = img_url;
 	}
 	
-	public int getGood() {
+	public Set<String> getGood() {
 		return good;
 	}
 
-	public void setGood(int good) {
+	public void setGood(Set<String> good) {
 		this.good = good;
 	}
 
-	public int getBad() {
+	public Set<String> getBad() {
 		return bad;
 	}
 
-	public void setBad(int bad) {
+	public void setBad(Set<String> bad) {
 		this.bad = bad;
 	}
 }

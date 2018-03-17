@@ -1,6 +1,7 @@
 package edu.nju.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class SaveService {
 		try {
 			String id = new UUid().getUUID32();
 			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id));
-			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, 0, 0));
+			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>()));
 			historydao.save(new BugHistory(id, parent, new ArrayList<String>()));
 			if(parent != "null") {
 				historydao.addChild(parent, id);
@@ -40,19 +41,25 @@ public class SaveService {
 		}
 	}
 	
-	public boolean confirm(String id) {
+	public boolean confirm(String id, String report_id) {
 		try {
-			mirrordao.good(id);
-			return true;
+			if(mirrordao.haveJudged(id, report_id)) {
+				mirrordao.good(id, report_id);
+				return true;
+			}
+			return false;
 		} catch(Exception e) {
 			return false;
 		}
 	}
 	
-	public boolean diss(String id) {
+	public boolean diss(String id, String report_id) {
 		try {
-			mirrordao.bad(id);
-			return true;
+			if(mirrordao.haveJudged(id, report_id)) {
+				mirrordao.bad(id, report_id);
+				return true;
+			}
+			return false;
 		} catch(Exception e) {
 			return false;
 		}
