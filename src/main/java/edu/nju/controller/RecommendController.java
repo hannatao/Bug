@@ -24,6 +24,11 @@ public class RecommendController {
 	@Autowired
 	HistoryService historyservice;
 	
+	/**
+	 * 每次刷新或进入填写页面，都应该调用一次该方法，因为其中包含了一些初始化操作
+	 * @param case_take_id
+	 * @return 该题目下排完序的BugMirror类的列表
+	 */
 	@RequestMapping(value = "/getList")
 	public void getList(String case_take_id, HttpSession session, HttpServletResponse response) {
 		try {
@@ -41,6 +46,11 @@ public class RecommendController {
 		}
 	}
 	
+	/**
+	 * 用户点击查看一个Bug的详细信息
+	 * @param id
+	 * @return Bug类
+	 */
 	@RequestMapping(value = "/getDetail")
 	public void getDetail(String id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
@@ -57,6 +67,11 @@ public class RecommendController {
 		}
 	}
 	
+	/**
+	 * 用户点击三个类别之后，都使用该接口
+	 * @param type("category", "severity", "recurrent"), content
+	 * @return List<BugMirror>
+	 */
 	@RequestMapping(value = "/recommend")
 	public void recommend(String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
