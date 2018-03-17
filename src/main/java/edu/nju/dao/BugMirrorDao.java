@@ -1,6 +1,7 @@
 package edu.nju.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -68,7 +69,9 @@ public class BugMirrorDao {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		Update update = new Update();
-		update.set("good", mongoOperations.find(query, BugMirror.class).get(0).getGood().add(report_id));
+		Set<String> good = mongoOperations.find(query, BugMirror.class).get(0).getGood();
+		good.add(report_id);
+		update.set("good", good);
 		mongoOperations.updateFirst(query,update,BugMirror.class);
 	}
 	
@@ -76,7 +79,9 @@ public class BugMirrorDao {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		Update update = new Update();
-		update.set("bad", mongoOperations.find(query, BugMirror.class).get(0).getBad().add(report_id));
+		Set<String> bad = mongoOperations.find(query, BugMirror.class).get(0).getBad();
+		bad.add(report_id);
+		update.set("bad", bad);
 		mongoOperations.updateFirst(query,update,BugMirror.class);
 	}
 }

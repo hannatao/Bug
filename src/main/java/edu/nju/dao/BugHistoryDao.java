@@ -1,5 +1,7 @@
 package edu.nju.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -45,9 +47,11 @@ public class BugHistoryDao {
 	public void addChild(String id, String child) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		BugHistory temp_hisroty = (BugHistory) mongoOps.find(query, BugHistory.class);
+		BugHistory temp_hisroty = (BugHistory) mongoOps.find(query, BugHistory.class).get(0);
 		Update update = new Update();
-		update.set("children", temp_hisroty.getChildren().add(child));
+		List<String> children = temp_hisroty.getChildren();
+		children.add(child);
+		update.set("children", children);
 		mongoOps.updateFirst(query,update,BugHistory.class);
 	}
 }

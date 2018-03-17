@@ -32,11 +32,12 @@ public class SaveService {
 			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id));
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>()));
 			historydao.save(new BugHistory(id, parent, new ArrayList<String>()));
-			if(parent != "null") {
+			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
 			}
 			return true;
 		} catch(Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

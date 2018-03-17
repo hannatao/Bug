@@ -26,7 +26,8 @@ public class RecommendService {
 	
 	public List<BugMirror> getList (String case_take_id){
 		Algorithm algorithm = new Algorithm_1();
-		return algorithm.sort(mirrordao.findByCase(case_take_id));
+		List<BugMirror> results = mirrordao.findByCase(case_take_id);
+		return algorithm.sort(results);
 	}
 	
 	public Bug getDetail (String id) {
@@ -37,6 +38,7 @@ public class RecommendService {
 	public List<BugMirror> recommend (String type, String content, HttpSession session){
 		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = new ArrayList<BugMirror>();
+		
 		if(session.getAttribute("rec") == null) {
 			results = findByNothing((String)session.getAttribute("case"), type, content);
 		} else {

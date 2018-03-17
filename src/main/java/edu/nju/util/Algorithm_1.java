@@ -17,7 +17,7 @@ public class Algorithm_1 implements Algorithm{
 				return m2.getGood().size() - m1.getGood().size();
 			}
 		});
-		for(int i = 0; i < results.size() && i < 3; i ++) {
+		for(int i = 0; i < lists.size() && i < 3; i ++) {
 			results.add(lists.get(i));
 		}
 		return results;
@@ -31,7 +31,7 @@ public class Algorithm_1 implements Algorithm{
 				return m2.getGood().size() - m1.getGood().size();
 			}
 		});
-		for(int i = 0; i < results.size() && i < 3; i ++) {
+		for(int i = 0; i < lists.size() && i < 3; i ++) {
 			results.add(lists.get(i));
 		}
 		return results;
