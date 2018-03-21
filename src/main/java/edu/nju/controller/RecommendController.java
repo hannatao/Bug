@@ -37,7 +37,7 @@ public class RecommendController {
 			}
 			session.setAttribute("case", case_take_id);
 			PrintWriter out = response.getWriter();
-			out.print(recservice.getList(case_take_id));
+			out.print(new JSONObject(recservice.getList(case_take_id)));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -55,8 +55,8 @@ public class RecommendController {
 	public void getDetail(String id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
 		try {
-			result.put("detail", recservice.getDetail(id));
-			result.put("history", historyservice.getHistory(id));
+			result.put("detail", new JSONObject(recservice.getDetail(id)));
+			result.put("history", new JSONObject(historyservice.getHistory(id)));
 			PrintWriter out = response.getWriter();
 			out.print(result);
 			out.flush();
@@ -76,7 +76,7 @@ public class RecommendController {
 	public void recommend(String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(recservice.recommend(type, content, session));
+			out.print(new JSONObject(recservice.recommend(type, content, session)));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
