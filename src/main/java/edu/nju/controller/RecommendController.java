@@ -71,7 +71,7 @@ public class RecommendController {
 	}
 	
 	/**
-	 * 用户点击三个类别之后，都使用该接口
+	 * 用户点击六个类别之后，都使用该接口
 	 * @param type("category", "severity", "recurrent"), content
 	 * @return List<BugMirror>
 	 */
@@ -79,7 +79,11 @@ public class RecommendController {
 	public void recommend(String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONObject(recservice.recommend(type, content, session)));
+			if(type.contains("page")) {
+				out.print(recservice.recommndByPage(type, content, session));
+			} else {
+				out.print(new JSONObject(recservice.recommend(type, content, session)));
+			}
 			out.flush();
 			out.close();
 		} catch (IOException e) {
