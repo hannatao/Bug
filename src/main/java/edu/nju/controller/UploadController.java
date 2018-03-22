@@ -21,9 +21,28 @@ public class UploadController {
 	SaveService saveservice;
 	
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public void submit(String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, HttpServletResponse response) {
+	public void submit(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		if(saveservice.save(case_take_id, bug_category, description, img_url, Integer.parseInt(severity), Integer.parseInt(recurrent), title, report_id, parent)) {
+		if(saveservice.save(id, case_take_id, bug_category, description, img_url, Integer.parseInt(severity), Integer.parseInt(recurrent), title, report_id, parent, page)) {
+			result.put("status", "200");
+		} else {
+			result.put("status", "500");
+		}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public void update(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.update(id, case_take_id, bug_category, description, img_url, Integer.parseInt(severity), Integer.parseInt(recurrent), title, report_id, parent, page)) {
 			result.put("status", "200");
 		} else {
 			result.put("status", "500");

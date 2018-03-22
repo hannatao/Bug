@@ -35,6 +35,9 @@ public class RecommendController {
 			if(session.getAttribute("rec") != null) {
 				session.removeAttribute("rec");
 			}
+			if(session.getAttribute("page") != null) {
+				session.removeAttribute("page");
+			}
 			session.setAttribute("case", case_take_id);
 			PrintWriter out = response.getWriter();
 			out.print(new JSONObject(recservice.getList(case_take_id)));

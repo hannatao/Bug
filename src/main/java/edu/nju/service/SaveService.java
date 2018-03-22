@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import edu.nju.dao.BugDao;
 import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
+import edu.nju.dao.BugPageDao;
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
-import edu.nju.util.UUid;
+import edu.nju.entities.BugPage;
 
 @Service
 public class SaveService {
@@ -26,14 +27,19 @@ public class SaveService {
 	@Autowired
 	BugHistoryDao historydao;
 	
-	public boolean save(String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent) {
+	@Autowired
+	BugPageDao pagedao;
+	
+	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent,String page) {
 		try {
-			String id = new UUid().getUUID32();
-			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id));
+			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id, page));
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>()));
 			historydao.save(new BugHistory(id, parent, new ArrayList<String>()));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
+			}
+			if(!page.equals("")) {
+				savePage(id, case_take_id, page);
 			}
 			return true;
 		} catch(Exception e) {
@@ -42,6 +48,19 @@ public class SaveService {
 		}
 	}
 	
+	public boolean update(String id, String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent,String page) {
+		try {
+			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id, page));
+			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>()));
+			if(!page.equals("")) {
+				savePage(id, case_take_id, page);
+			}
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	public boolean confirm(String id, String report_id) {
 		try {
 			if(mirrordao.haveJudged(id, report_id)) {
@@ -64,5 +83,20 @@ public class SaveService {
 		} catch(Exception e) {
 			return false;
 		}
+	}
+	
+	private void savePage(String id, String case_take_id, String page) {
+		String[] pages = page.split("-");
+		int length = pages.length;
+		String page2 = "";
+		String page3 = "";
+		if(length == 2) {
+			page2 = pages[1];
+		} else if(length == 3) {
+			page2 = pages[1];
+			page3 = pages[2];
+		}
+		BugPage save = new BugPage(id, pages[0], page2, page3, case_take_id);
+		pagedao.save(save);
 	}
 }

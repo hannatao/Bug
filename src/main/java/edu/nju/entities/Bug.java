@@ -27,8 +27,10 @@ public class Bug {
 	
 	private String img_url;
 	
+	private String bug_page;
+	
 	@PersistenceConstructor
-	public Bug(String id, String case_take_id, String create_time_millis, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id) {
+	public Bug(String id, String case_take_id, String create_time_millis, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String bug_page) {
 		this.id = id;
 		this.case_take_id = case_take_id;
 		this.create_time_millis = create_time_millis;
@@ -39,8 +41,17 @@ public class Bug {
 		this.recurrent = recurrent;
 		this.title = title;
 		this.report_id = report_id;
+		this.bug_page = bug_page;
 	}
 	
+	public String getBug_page() {
+		return bug_page;
+	}
+
+	public void setBug_page(String bug_page) {
+		this.bug_page = bug_page;
+	}
+
 	public String getId() {
 		return id;
 	}
