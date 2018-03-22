@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class RecommendController {
 			}
 			session.setAttribute("case", case_take_id);
 			PrintWriter out = response.getWriter();
-			out.print(new JSONObject(recservice.getList(case_take_id)));
+			out.print(new JSONArray(recservice.getList(case_take_id)));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -80,9 +81,9 @@ public class RecommendController {
 		try {
 			PrintWriter out = response.getWriter();
 			if(type.contains("page")) {
-				out.print(recservice.recommndByPage(type, content, session));
+				out.print(new JSONArray(recservice.recommndByPage(type, content, session)));
 			} else {
-				out.print(new JSONObject(recservice.recommend(type, content, session)));
+				out.print(new JSONArray(recservice.recommend(type, content, session)));
 			}
 			out.flush();
 			out.close();
