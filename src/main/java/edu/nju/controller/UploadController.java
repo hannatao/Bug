@@ -20,6 +20,7 @@ public class UploadController {
 	@Autowired
 	SaveService saveservice;
 	
+	//上传新的Bug报告
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public void submit(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
@@ -39,6 +40,7 @@ public class UploadController {
 		}
 	}
 	
+	//对已有报告进行修改
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public void update(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
@@ -58,6 +60,7 @@ public class UploadController {
 		}
 	}
 	
+	//👍
 	@RequestMapping(value = "/good")
 	public void good(String id, String report_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
@@ -77,6 +80,7 @@ public class UploadController {
 		}
 	}
 	
+	//差评
 	@RequestMapping(value = "/bad")
 	public void bad(String id, String report_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
