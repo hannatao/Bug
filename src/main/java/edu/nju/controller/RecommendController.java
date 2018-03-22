@@ -72,7 +72,7 @@ public class RecommendController {
 	
 	/**
 	 * 用户点击六个类别之后，都使用该接口
-	 * @param type("category", "severity", "recurrent"), content
+	 * @param type("category", "severity", "recurrent", "page1", "page2", "page3"), content
 	 * @return List<BugMirror>
 	 */
 	@RequestMapping(value = "/recommend")
