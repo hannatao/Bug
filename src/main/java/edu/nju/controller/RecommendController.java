@@ -10,13 +10,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.service.HistoryService;
 import edu.nju.service.RecommendService;
 
 @Controller
 @RequestMapping(value = "/rec")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class RecommendController {
 	
 	@Autowired
@@ -30,7 +34,9 @@ public class RecommendController {
 	 * @param case_take_id
 	 * @return 该题目下排完序的BugMirror类的列表
 	 */
-	@RequestMapping(value = "/getList")
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/getList")
+	@ResponseBody
 	public void getList(String case_take_id, HttpSession session, HttpServletResponse response) {
 		try {
 			if(session.getAttribute("rec") != null) {
@@ -56,7 +62,9 @@ public class RecommendController {
 	 * @return Bug类
 	 */
 	@RequestMapping(value = "/getDetail")
+	@ResponseBody
 	public void getDetail(String id, HttpServletResponse response) {
+		System.out.println(id);
 		JSONObject result = new JSONObject();
 		try {
 			result.put("detail", new JSONObject(recservice.getDetail(id)));
@@ -77,6 +85,7 @@ public class RecommendController {
 	 * @return List<BugMirror>
 	 */
 	@RequestMapping(value = "/recommend")
+	@ResponseBody
 	public void recommend(String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();

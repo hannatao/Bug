@@ -47,7 +47,11 @@ public class BugDao {
 	public Bug findByid(String id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		return mongoOperations.find(query,Bug.class).get(0);
+		List<Bug> list = mongoOperations.find(query,Bug.class);
+		if(list != null) {
+			return list.get(0);
+		}
+		return null;
 	}
 	
 	//case条件查询，find查询所有
