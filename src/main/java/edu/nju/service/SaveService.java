@@ -30,10 +30,10 @@ public class SaveService {
 	@Autowired
 	BugPageDao pagedao;
 	
-	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent,String page) {
+	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent,String page) {
 		try {
-			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id, page));
-			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>()));
+			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page));
+			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>()));
 			historydao.save(new BugHistory(id, parent, new ArrayList<String>()));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
@@ -98,5 +98,43 @@ public class SaveService {
 		}
 		BugPage save = new BugPage(id, pages[0], page2, page3, case_take_id);
 		pagedao.save(save);
+	}
+	
+	private int severityTranse(String str) {
+		if(str.equals("待定")) {
+			return 1;
+		}
+		if(str.equals("较轻")) {
+			return 2;
+		}
+		if(str.equals("一般")) {
+			return 3;
+		}
+		if(str.equals("严重")) {
+			return 4;
+		}
+		if(str.equals("紧急")) {
+			return 5;
+		}
+		return 0;
+	}
+	
+	private int recurrentTranse(String str) {
+		if(str.equals("必现")) {
+			return 1;
+		}
+		if(str.equals("大概率复现")) {
+			return 2;
+		}
+		if(str.equals("小概率复现")) {
+			return 3;
+		}
+		if(str.equals("无规律复现")) {
+			return 4;
+		}
+		if(str.equals("其他")) {
+			return 5;
+		}
+		return 0;
 	}
 }

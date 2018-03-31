@@ -1,7 +1,9 @@
 package edu.nju.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
 
@@ -40,14 +42,23 @@ public class RecommendService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BugMirror> recommend (String type, String content, HttpSession session){
+	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session){
 		
 		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("rec") == null) {
-			results = findByNothing((String)session.getAttribute("case"), type, content);
+			results = findByNothing(case_take_id, type, content);
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(type, content);
+			session.setAttribute("path", map);
 		} else {
+			HashMap<String, String> map = (HashMap<String, String>)session.getAttribute("path");
+			if(map.containsKey(type)) {
+				return pathExist(case_take_id, type, content, session, map);
+			}
+			map.put(type, content);
+			session.setAttribute("path", map);
 			results = findByNow(type, content, (List<BugMirror>) session.getAttribute("rec"));
 		}
 		
@@ -57,18 +68,32 @@ public class RecommendService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BugMirror> recommndByPage(String type, String content, HttpSession session){
+	public List<BugMirror> recommndByPage(String case_take_id, String type, String content, HttpSession session){
 		
 		Algorithm algorithm = new Algorithm_1();
 		List<BugPage> results = new ArrayList<BugPage>();
 		List<BugMirror> mirrors = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("page") == null) {
-			results = findPages((String)session.getAttribute("case"), type, content);
+			results = findPages(case_take_id, type, content);
 			mirrors = findMirror(getIds(results));
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put(type, content);
+			session.setAttribute("path", map);
 		} else {
-			results = findByPages(type, content, (List<BugPage>) session.getAttribute("page"));
-			mirrors = findByMirror(getIds(results), (List<BugMirror>) session.getAttribute("rec"));
+			HashMap<String, String> map = (HashMap<String, String>)session.getAttribute("path");
+			if(map.containsKey(type)) {
+				results = findPages(case_take_id, type, content);
+				mirrors = findMirror(getIds(results));
+				HashMap<String, String> new_map = new HashMap<String, String>();
+				new_map.put(type, content);
+				session.setAttribute("path", new_map);
+			} else {
+				map.put(type, content);
+				session.setAttribute("path", map);
+				results = findByPages(type, content, (List<BugPage>) session.getAttribute("page"));
+				mirrors = findByMirror(getIds(results), (List<BugMirror>) session.getAttribute("rec"));
+			}
 		}
 		
 		session.setAttribute("page", results);
@@ -81,19 +106,19 @@ public class RecommendService {
 	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		switch(type) {
-			case "category":
+			case "bug_category":
 				for(BugMirror mirror : lists) {
-					if(mirror.getBug_category() == content) {results.add(mirror);}
+					if(mirror.getBug_category().equals(content)) {results.add(mirror);}
 				}
 				break;
 			case "severity":
 				for(BugMirror mirror : lists) {
-					if(mirror.getSeverity() == Integer.parseInt(content)) {results.add(mirror);}
+					if(mirror.getSeverity() == severityTranse(content)) {results.add(mirror);}
 				}
 				break;
 			case "recurrent":
 				for(BugMirror mirror : lists) {
-					if(mirror.getRecurrent() == Integer.parseInt(content)) {results.add(mirror);}
+					if(mirror.getRecurrent() == recurrentTranse(content)) {results.add(mirror);}
 				}
 				break;
 		}
@@ -102,12 +127,12 @@ public class RecommendService {
 	
 	private List<BugMirror> findByNothing(String case_take_id, String type, String content){
 		switch(type) {
-			case "category":
+			case "bug_category":
 				return mirrordao.findByCategory(case_take_id, content);
 			case "severity":
-				return mirrordao.findBySeverity(case_take_id, Integer.parseInt(content));
+				return mirrordao.findBySeverity(case_take_id, severityTranse(content));
 			case "recurrent":
-				return mirrordao.findByRecurrent(case_take_id, Integer.parseInt(content));
+				return mirrordao.findByRecurrent(case_take_id, recurrentTranse(content));
 		}
 		return null;
 	}
@@ -127,19 +152,19 @@ public class RecommendService {
 	private List<BugPage> findByPages(String type, String content, List<BugPage> lists){
 		List<BugPage> results = new ArrayList<BugPage>();
 		switch(type) {
-			case "category":
+			case "page1":
 				for(BugPage page : lists) {
-					if(page.getPage1() == content) {results.add(page);}
+					if(page.getPage1().equals(content)) {results.add(page);}
 				}
 				break;
-			case "severity":
+			case "page2":
 				for(BugPage page : lists) {
-					if(page.getPage2() == content) {results.add(page);}
+					if(page.getPage2().equals(content)) {results.add(page);}
 				}
 				break;
-			case "recurrent":
+			case "page3":
 				for(BugPage page : lists) {
-					if(page.getPage3() == content) {results.add(page);}
+					if(page.getPage3().equals(content)) {results.add(page);}
 				}
 				break;
 		}
@@ -166,5 +191,62 @@ public class RecommendService {
 			ids.add(pages.get(i).getId());
 		}
 		return ids;
+	}
+	
+	private List<BugMirror> pathExist(String case_take_id, String type, String content, HttpSession session, HashMap<String, String> map){
+		List<BugMirror> results = new ArrayList<BugMirror>();
+		results = findByNothing(case_take_id, type, content);
+		boolean flag = true;
+		map.put(type, content);
+		for(Entry<String, String> entry: map.entrySet()) {
+			if(!type.contains("page")) {
+				if(flag) {
+					results = findByNothing(case_take_id, entry.getKey(), entry.getValue());
+				} else {
+					results = findByNow(entry.getKey(), entry.getValue(), results);
+				}
+			}
+		}
+		session.setAttribute("rec", results);
+		session.setAttribute("path", map);;
+		return results;
+	}
+	
+	private int severityTranse(String str) {
+		if(str.equals("待定")) {
+			return 1;
+		}
+		if(str.equals("较轻")) {
+			return 2;
+		}
+		if(str.equals("一般")) {
+			return 3;
+		}
+		if(str.equals("严重")) {
+			return 4;
+		}
+		if(str.equals("紧急")) {
+			return 5;
+		}
+		return 0;
+	}
+	
+	private int recurrentTranse(String str) {
+		if(str.equals("必现")) {
+			return 1;
+		}
+		if(str.equals("大概率复现")) {
+			return 2;
+		}
+		if(str.equals("小概率复现")) {
+			return 3;
+		}
+		if(str.equals("无规律复现")) {
+			return 4;
+		}
+		if(str.equals("其他")) {
+			return 5;
+		}
+		return 0;
 	}
 }

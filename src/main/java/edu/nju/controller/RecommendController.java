@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.service.HistoryService;
@@ -34,8 +33,7 @@ public class RecommendController {
 	 * @param case_take_id
 	 * @return 该题目下排完序的BugMirror类的列表
 	 */
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/getList")
+	@RequestMapping(value = "/getList")
 	@ResponseBody
 	public void getList(String case_take_id, HttpSession session, HttpServletResponse response) {
 		try {
@@ -44,6 +42,9 @@ public class RecommendController {
 			}
 			if(session.getAttribute("page") != null) {
 				session.removeAttribute("page");
+			}
+			if(session.getAttribute("path") != null) {
+				session.removeAttribute("path");
 			}
 			session.setAttribute("case", case_take_id);
 			PrintWriter out = response.getWriter();
@@ -64,7 +65,6 @@ public class RecommendController {
 	@RequestMapping(value = "/getDetail")
 	@ResponseBody
 	public void getDetail(String id, HttpServletResponse response) {
-		System.out.println(id);
 		JSONObject result = new JSONObject();
 		try {
 			result.put("detail", new JSONObject(recservice.getDetail(id)));
@@ -86,13 +86,13 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/recommend")
 	@ResponseBody
-	public void recommend(String type, String content, HttpSession session, HttpServletResponse response) {
+	public void recommend(String case_take_id, String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
 			if(type.contains("page")) {
-				out.print(new JSONArray(recservice.recommndByPage(type, content, session)));
+				out.print(new JSONArray(recservice.recommndByPage(case_take_id, type, content, session)));
 			} else {
-				out.print(new JSONArray(recservice.recommend(type, content, session)));
+				out.print(new JSONArray(recservice.recommend(case_take_id, type, content, session)));
 			}
 			out.flush();
 			out.close();
