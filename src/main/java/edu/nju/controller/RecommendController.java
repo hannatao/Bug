@@ -69,6 +69,7 @@ public class RecommendController {
 		try {
 			result.put("detail", new JSONObject(recservice.getDetail(id)));
 			result.put("history", new JSONObject(historyservice.getHistory(id)));
+			result.put("mirror", new JSONObject(recservice.getMirror(id)));
 			PrintWriter out = response.getWriter();
 			out.print(result);
 			out.flush();
@@ -97,6 +98,20 @@ public class RecommendController {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/title")
+	@ResponseBody
+	public void getTitle(String id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(recservice.getTitle(id));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

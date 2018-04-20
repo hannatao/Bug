@@ -41,6 +41,14 @@ public class RecommendService {
 		return bugdao.findByid(id);
 	}
 	
+	public BugMirror getMirror(String id) {
+		return mirrordao.findById(id);
+	}
+	
+	public String getTitle(String id) {
+		return bugdao.findByid(id).getTitle();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session){
 		
@@ -196,6 +204,7 @@ public class RecommendService {
 	private List<BugMirror> pathExist(String case_take_id, String type, String content, HttpSession session, HashMap<String, String> map){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		results = findByNothing(case_take_id, type, content);
+		Algorithm algorithm = new Algorithm_1();
 		boolean flag = true;
 		map.put(type, content);
 		for(Entry<String, String> entry: map.entrySet()) {
@@ -209,7 +218,7 @@ public class RecommendService {
 		}
 		session.setAttribute("rec", results);
 		session.setAttribute("path", map);;
-		return results;
+		return algorithm.sort(results);
 	}
 	
 	private int severityTranse(String str) {
@@ -249,4 +258,5 @@ public class RecommendService {
 		}
 		return 0;
 	}
+	
 }

@@ -60,6 +60,12 @@ public class BugMirrorDao {
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
+	public BugMirror findById(String id){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		return mongoOperations.find(query, BugMirror.class).get(0);
+	}
+	
 	public boolean haveJudged(String id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));

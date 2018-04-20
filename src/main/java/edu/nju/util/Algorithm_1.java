@@ -28,7 +28,7 @@ public class Algorithm_1 implements Algorithm{
 		
 		lists.sort(new Comparator<BugMirror>() {
 			public int compare(BugMirror m1, BugMirror m2) {
-				return m2.getGood().size() - m1.getGood().size();
+				return m1.getGood().size() - m2.getGood().size();
 			}
 		});
 		for(int i = 0; i < lists.size() && i < 5; i ++) {
