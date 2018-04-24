@@ -118,6 +118,12 @@
 		<artifactId>commons-fileupload</artifactId>
 		<version>1.2.1</version>
 	</dependency>
+	
+	<dependency>
+        <groupId>org.ansj</groupId>
+        <artifactId>ansj_seg</artifactId>
+        <version>5.1.1</version>
+    </dependency>
   </dependencies>
   
   <build>

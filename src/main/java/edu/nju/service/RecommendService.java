@@ -18,6 +18,7 @@ import edu.nju.entities.BugMirror;
 import edu.nju.entities.BugPage;
 import edu.nju.util.Algorithm;
 import edu.nju.util.Algorithm_1;
+import edu.nju.util.StringMatch;
 
 @Service
 public class RecommendService {
@@ -109,6 +110,15 @@ public class RecommendService {
 		
 		if(mirrors != null) {return algorithm.sort(mirrors);}
 		return mirrors;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BugMirror> recommandByTitle(String content, HttpSession session){
+		StringMatch match = new StringMatch();
+		if(session.getAttribute("rec") != null) {
+			return  match.match(content, (List<BugMirror>)session.getAttribute("rec"));
+		}
+		return null;
 	}
 	
 	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){

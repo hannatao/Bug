@@ -90,6 +90,9 @@ public class RecommendController {
 	public void recommend(String case_take_id, String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
+			if(type.equals("title")) {
+				out.print(new JSONArray(recservice.recommandByTitle(content, session)));
+			}
 			if(type.contains("page")) {
 				out.print(new JSONArray(recservice.recommndByPage(case_take_id, type, content, session)));
 			} else {
