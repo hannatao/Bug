@@ -1,5 +1,6 @@
 package edu.nju.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,18 @@ public class BugDao {
 	    Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
 	    mongoOperations.remove(query,Bug.class);
+	}
+	
+	//根据report_id查找所有的Bug
+	public List<String> findByReport(String report_id) {
+		List<String> result = new ArrayList<String>();
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("report_id").is(report_id));
+	    List<Bug> lists = mongoOperations.find(query,Bug.class);
+	    for(Bug list : lists) {
+	    	result.add(list.getId());
+	    }
+	    return result;
 	}
 	
 	//根据id更新文档

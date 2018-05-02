@@ -1,5 +1,6 @@
 package edu.nju.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,31 @@ public class BugHistoryDao {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		return mongoOps.find(query,BugHistory.class).get(0);
+	}
+	
+	//查找所有指定的根
+	public List<String> findRoots(List<String> lists) {
+		if(lists == null || lists.size() == 0) {return null;}
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(lists));
+		List<BugHistory> roots = mongoOps.find(query,BugHistory.class);
+		List<String> ids = new ArrayList<String>();
+		for(BugHistory root: roots) {
+			ids.add(root.getRoot());
+		}
+		return ids;
+	}
+	
+	//查找所有的BugRoot
+	public List<String> findRoots() {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("parent").is("null"));
+		List<BugHistory> roots = mongoOps.find(query,BugHistory.class);
+		List<String> ids = new ArrayList<String>();
+		for(BugHistory root : roots) {
+			ids.add(root.getId());
+		}
+		return ids;
 	}
 	
 	//根据id删除文档

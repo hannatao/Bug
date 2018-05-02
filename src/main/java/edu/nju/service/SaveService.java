@@ -30,14 +30,21 @@ public class SaveService {
 	@Autowired
 	BugPageDao pagedao;
 	
+	@Autowired
+	HistoryService hisservice;
+	
 	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent,String page) {
 		try {
 			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page));
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>()));
-			historydao.save(new BugHistory(id, parent, new ArrayList<String>()));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
+				String p = hisservice.getHistory(parent).getId();
+				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), p));
+			} else {
+				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), id));
 			}
+			
 			if(!page.equals("")) {
 				savePage(id, case_take_id, page);
 			}

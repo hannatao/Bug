@@ -14,12 +14,15 @@ public class BugHistory {
 	private String parent;
 	
 	private List<String> children;
+	
+	private String root;
 
 	@PersistenceConstructor
-	public BugHistory(String id, String parent, List<String> children) {
+	public BugHistory(String id, String parent, List<String> children, String root) {
 		this.id = id;
 		this.parent = parent;
 		this.children = children;
+		this.root = root;
 	}
 
 	public String getId() {
@@ -44,5 +47,13 @@ public class BugHistory {
 
 	public void setChildren(List<String> children) {
 		this.children = children;
+	}
+
+	public String getRoot() {
+		return root;
+	}
+
+	public void setRoot(String root) {
+		this.root = root;
 	}
 }

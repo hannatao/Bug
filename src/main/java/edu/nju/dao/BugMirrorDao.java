@@ -55,6 +55,7 @@ public class BugMirrorDao {
 	}
 	
 	public List<BugMirror> findByIds(List<String> ids){
+		if(ids == null || ids.size() == 0) {return null;}
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").in(ids));
 		return mongoOperations.find(query, BugMirror.class);

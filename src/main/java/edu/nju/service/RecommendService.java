@@ -42,12 +42,16 @@ public class RecommendService {
 		return bugdao.findByid(id);
 	}
 	
-	public BugMirror getMirror(String id) {
+	public BugMirror getMirror (String id) {
 		return mirrordao.findById(id);
 	}
 	
-	public String getTitle(String id) {
+	public String getTitle (String id) {
 		return bugdao.findByid(id).getTitle();
+	}
+	
+	public String getReport(String id) {
+		return bugdao.findByid(id).getReport_id();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -116,7 +120,10 @@ public class RecommendService {
 	public List<BugMirror> recommandByTitle(String content, HttpSession session){
 		StringMatch match = new StringMatch();
 		if(session.getAttribute("rec") != null) {
-			return  match.match(content, (List<BugMirror>)session.getAttribute("rec"));
+			return match.match(content, (List<BugMirror>)session.getAttribute("rec"));
+		}
+		if(session.getAttribute("pages") != null) {
+			return match.match(content, findMirror(getIds((List<BugPage>) session.getAttribute("page"))));
 		}
 		return null;
 	}

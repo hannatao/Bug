@@ -3,17 +3,20 @@ package edu.nju.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.ansj.domain.Term;
 import org.ansj.splitWord.analysis.ToAnalysis;
 
 import edu.nju.entities.BugMirror;
 
 public class StringMatch {
 	public List<BugMirror> match(String content, List<BugMirror> mirrors) {
-		String[] strs= Ansj(content).split(" ");
+		String[] strs = Ansj(content).split(",");
 		List<BugMirror> result = new ArrayList<BugMirror>();
 		Map<BugMirror, Integer> map = new HashMap<BugMirror, Integer>();
 		for(BugMirror mirror : mirrors) {
@@ -41,6 +44,20 @@ public class StringMatch {
 	}
 	
 	public String Ansj(String str) {
-		return ToAnalysis.parse(str).toStringWithOutNature();
+		Set<String> expectedNature = new HashSet<String> ();
+        expectedNature.add("n");
+        expectedNature.add("v");
+        expectedNature.add("f");
+        expectedNature.add("en");
+        StringBuilder result = new StringBuilder();
+        List<Term> terms = ToAnalysis.parse(str).getTerms();
+        for(Term term : terms) {
+        	String word = term.getName();
+        	String nature = term.getNatureStr();
+        	if(expectedNature.contains(nature)) {
+        		result.append(word+",");
+        	}
+        }
+        return result.toString();
 	}
 }

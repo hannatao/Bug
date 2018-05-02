@@ -2,6 +2,8 @@ package edu.nju.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.nju.entities.BugMirror;
 import edu.nju.service.HistoryService;
 import edu.nju.service.RecommendService;
+import edu.nju.service.UserBasedService;
 
 @Controller
 @RequestMapping(value = "/rec")
@@ -28,6 +32,9 @@ public class RecommendController {
 	@Autowired
 	HistoryService historyservice;
 	
+	@Autowired
+	UserBasedService ubservice;
+	
 	/**
 	 * 每次刷新或进入填写页面，都应该调用一次该方法，因为其中包含了一些初始化操作
 	 * @param case_take_id
@@ -35,7 +42,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/getList")
 	@ResponseBody
-	public void getList(String case_take_id, HttpSession session, HttpServletResponse response) {
+	public void getList(String case_take_id, String report_id, HttpSession session, HttpServletResponse response) {
 		try {
 			if(session.getAttribute("rec") != null) {
 				session.removeAttribute("rec");
@@ -47,8 +54,11 @@ public class RecommendController {
 				session.removeAttribute("path");
 			}
 			session.setAttribute("case", case_take_id);
+			session.setAttribute("report", report_id);
 			PrintWriter out = response.getWriter();
-			out.print(new JSONArray(recservice.getList(case_take_id)));
+			List<BugMirror> mirrors = recservice.getList(case_take_id);
+			filter(historyservice.getNew(), mirrors);
+			out.print(new JSONArray(mirrors));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -90,14 +100,25 @@ public class RecommendController {
 	public void recommend(String case_take_id, String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
+			List<BugMirror> mirrors = new ArrayList<BugMirror>();
 			if(type.equals("title")) {
-				out.print(new JSONArray(recservice.recommandByTitle(content, session)));
-			}
-			if(type.contains("page")) {
-				out.print(new JSONArray(recservice.recommndByPage(case_take_id, type, content, session)));
+				mirrors.addAll(recservice.recommandByTitle(content, session));
 			} else {
-				out.print(new JSONArray(recservice.recommend(case_take_id, type, content, session)));
+				if(type.contains("page")) {
+					mirrors.addAll(recservice.recommndByPage(case_take_id, type, content, session));
+				} else {
+					mirrors.addAll(recservice.recommend(case_take_id, type, content, session));
+				}
+				List<String> reports = new ArrayList<String>();
+				reports.add((String)session.getAttribute("report"));
+				for(int i = 1; i <= mirrors.size(); i ++) {
+					String temp = recservice.getReport(mirrors.get(i - 1).getId());
+					if(!reports.contains(temp)) {reports.add(temp);}
+				}
+				filter(ubservice.UserBased(reports.toArray(new String[reports.size()])), mirrors);
+				filter(historyservice.getNew(), mirrors);
 			}
+			out.print(new JSONArray(mirrors));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -117,6 +138,16 @@ public class RecommendController {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public static void filter(List<BugMirror> a, List<BugMirror> b) {
+		for(BugMirror a1: a) {
+			boolean flag = true;
+			for(BugMirror b1 : b) {
+				if(a1.getId().equals(b1.getId())) {flag = false;}
+			}
+			if(flag) {b.add(a1);}
 		}
 	}
 }

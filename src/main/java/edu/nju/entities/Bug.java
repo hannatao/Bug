@@ -2,6 +2,7 @@ package edu.nju.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -19,6 +20,7 @@ public class Bug {
 	
 	private String title;
 	
+	@Indexed
 	private String report_id;
 
 	private String create_time_millis;
