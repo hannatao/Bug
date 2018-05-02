@@ -57,7 +57,7 @@ public class RecommendController {
 			session.setAttribute("report", report_id);
 			PrintWriter out = response.getWriter();
 			List<BugMirror> mirrors = recservice.getList(case_take_id);
-			filter(historyservice.getNew(), mirrors);
+			filter(historyservice.getNew(), mirrors, case_take_id);
 			out.print(new JSONArray(mirrors));
 			out.flush();
 			out.close();
@@ -115,8 +115,8 @@ public class RecommendController {
 					String temp = recservice.getReport(mirrors.get(i - 1).getId());
 					if(!reports.contains(temp)) {reports.add(temp);}
 				}
-				filter(ubservice.UserBased(reports.toArray(new String[reports.size()])), mirrors);
-				filter(historyservice.getNew(), mirrors);
+				filter(ubservice.UserBased(reports.toArray(new String[reports.size()])), mirrors, case_take_id);
+				filter(historyservice.getNew(), mirrors, case_take_id);
 			}
 			out.print(new JSONArray(mirrors));
 			out.flush();
@@ -141,11 +141,13 @@ public class RecommendController {
 		}
 	}
 	
-	public static void filter(List<BugMirror> a, List<BugMirror> b) {
+	public static void filter(List<BugMirror> a, List<BugMirror> b, String case_take_id) {
+		if(a == null) {return;}
 		for(BugMirror a1: a) {
 			boolean flag = true;
 			for(BugMirror b1 : b) {
 				if(a1.getId().equals(b1.getId())) {flag = false;}
+				if(a1.getCase_take_id() != case_take_id) {flag = false;}
 			}
 			if(flag) {b.add(a1);}
 		}

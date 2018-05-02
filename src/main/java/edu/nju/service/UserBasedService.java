@@ -1,5 +1,6 @@
 package edu.nju.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,12 @@ public class UserBasedService {
 	}
 	
 	public List<String> getBugs(String report_id) {
-		return historydao.findRoots(bugdao.findByReport(report_id));
+		List<String> result =  historydao.findRoots(bugdao.findByReport(report_id));
+		if(result == null) {
+			return new ArrayList<String>();
+		} else {
+			return result;
+		}
 	}
 	
 }

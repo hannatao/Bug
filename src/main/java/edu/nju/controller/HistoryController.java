@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,4 +38,17 @@ public class HistoryController {
 		}
 	}
 	
+	@RequestMapping(value = "/getPath")
+	@ResponseBody
+	public void getPath(String id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(new JSONArray(hisservice.getDepth(id)));
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

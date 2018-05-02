@@ -53,4 +53,26 @@ public class HistoryService {
 		}
 		return mirrordao.findByIds(filter);
 	}
+	
+	public List<List<String>> getDepth(String id) {
+		BugHistory root = historydao.findByid(id);
+		List<List<String>> result = new ArrayList<List<String>>();
+		List<String> list = new ArrayList<String>();
+		list.add(root.getId());
+		dfs(root, result, list);
+		return result;
+	}
+	
+	public void dfs(BugHistory root, List<List<String>> result, List<String> list) {
+		List<String> children = root.getChildren();
+		if(children.size() != 0) {
+			for(String child : children) {
+				list.add(child);
+				dfs(historydao.findByid(child), result, list);
+				list.remove(child);
+			}
+		} else {
+			result.add(new ArrayList<String>(list));
+		}
+	}
 }

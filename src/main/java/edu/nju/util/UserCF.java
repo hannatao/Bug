@@ -90,7 +90,9 @@ public class UserCF {
 			return rec;
 		} else if(lists.size() == 1) {
 			rec.add(lists.get(0).getKey());
+			return rec;
 		}
+		rec.add(lists.get(0).getKey());
 		rec.add(lists.get(1).getKey());
 		return rec;
 	}
