@@ -76,7 +76,7 @@ public class BugHistoryDao {
 		BugHistory temp_hisroty = (BugHistory) mongoOps.find(query, BugHistory.class).get(0);
 		Update update = new Update();
 		List<String> children = temp_hisroty.getChildren();
-		children.add(child);
+		if(!children.contains(child)) {children.add(child);}
 		update.set("children", children);
 		mongoOps.updateFirst(query,update,BugHistory.class);
 	}

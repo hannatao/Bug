@@ -29,13 +29,14 @@ public class HistoryService {
 		Stack<String> stack = new Stack<String>();
 		List<String> result = new ArrayList<String>();
 		String parent = getHistory(id).getParent();
-		while(parent.equals("null")) {
+		while(!parent.equals("null")) {
 			stack.push(parent);
 			parent = getHistory(parent).getParent();
 		}
 		while(!stack.isEmpty()) {
 			result.add(stack.pop());
 		}
+		result.add(id);
 		return result;
 	}
 	

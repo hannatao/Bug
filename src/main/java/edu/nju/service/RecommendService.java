@@ -32,7 +32,7 @@ public class RecommendService {
 	@Autowired
 	BugPageDao pagedao;
 	
-	public List<BugMirror> getList (String case_take_id){
+	public List<BugMirror> getList (String case_take_id) {
 		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = mirrordao.findByCase(case_take_id);
 		return algorithm.sort(results);
@@ -55,7 +55,7 @@ public class RecommendService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session){
+	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session) {
 		
 		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = new ArrayList<BugMirror>();

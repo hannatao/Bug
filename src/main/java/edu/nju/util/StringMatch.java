@@ -34,8 +34,8 @@ public class StringMatch {
 		list.addAll(map.entrySet());
 		Collections.sort(list, (a, b) -> (b.getValue() - a.getValue()));
 		if(list.size() > 0) {
-			for(Entry<BugMirror,Integer> mirror : list) {
-				result.add(mirror.getKey());
+			for(int i = 0; i < list.size() && i < 8; i ++) {
+				result.add(list.get(i).getKey());
 			}
 			return result;
 		} else {

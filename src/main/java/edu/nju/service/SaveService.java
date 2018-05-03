@@ -39,7 +39,7 @@ public class SaveService {
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>()));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
-				String p = hisservice.getHistory(parent).getId();
+				String p = hisservice.parents(parent).get(0);
 				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), p));
 			} else {
 				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), id));
