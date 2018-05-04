@@ -116,10 +116,8 @@ public class RecommendController {
 					if(!reports.contains(temp)) {reports.add(temp);}
 				}
 				filter(ubservice.UserBased(reports.toArray(new String[reports.size()])), mirrors, case_take_id);
-				System.out.println(mirrors.size());
-				filter(historyservice.getNew(), mirrors, case_take_id);
-				System.out.println(mirrors.size());
 			}
+			filter(historyservice.getNew(), mirrors, case_take_id);
 			out.print(new JSONArray(mirrors));
 			out.flush();
 			out.close();

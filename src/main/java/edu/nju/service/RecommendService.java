@@ -119,13 +119,14 @@ public class RecommendService {
 	@SuppressWarnings("unchecked")
 	public List<BugMirror> recommandByTitle(String content, HttpSession session){
 		StringMatch match = new StringMatch();
+		List<BugMirror> mirrors = new ArrayList<BugMirror>();
 		if(session.getAttribute("rec") != null) {
-			return match.match(content, (List<BugMirror>)session.getAttribute("rec"));
+			mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));
 		}
 		if(session.getAttribute("pages") != null) {
-			return match.match(content, findMirror(getIds((List<BugPage>) session.getAttribute("page"))));
+			mirrors.addAll(match.match(content, findMirror(getIds((List<BugPage>) session.getAttribute("page")))));
 		}
-		return null;
+		return mirrors;
 	}
 	
 	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){
@@ -258,19 +259,19 @@ public class RecommendService {
 	}
 	
 	private int recurrentTranse(String str) {
-		if(str.equals("必现")) {
+		if(str.equals("其他")) {
 			return 1;
 		}
-		if(str.equals("大概率复现")) {
+		if(str.equals("无规律复现")) {
 			return 2;
 		}
 		if(str.equals("小概率复现")) {
 			return 3;
 		}
-		if(str.equals("无规律复现")) {
+		if(str.equals("大概率复现")) {
 			return 4;
 		}
-		if(str.equals("其他")) {
+		if(str.equals("必现")) {
 			return 5;
 		}
 		return 0;

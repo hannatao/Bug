@@ -127,19 +127,19 @@ public class SaveService {
 	}
 	
 	private int recurrentTranse(String str) {
-		if(str.equals("必现")) {
+		if(str.equals("其他")) {
 			return 1;
 		}
-		if(str.equals("大概率复现")) {
+		if(str.equals("无规律复现")) {
 			return 2;
 		}
 		if(str.equals("小概率复现")) {
 			return 3;
 		}
-		if(str.equals("无规律复现")) {
+		if(str.equals("大概率复现")) {
 			return 4;
 		}
-		if(str.equals("其他")) {
+		if(str.equals("必现")) {
 			return 5;
 		}
 		return 0;

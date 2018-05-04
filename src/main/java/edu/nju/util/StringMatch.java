@@ -37,10 +37,8 @@ public class StringMatch {
 			for(int i = 0; i < list.size() && i < 8; i ++) {
 				result.add(list.get(i).getKey());
 			}
-			return result;
-		} else {
-			return mirrors;
 		}
+		return result;
 	}
 	
 	public String Ansj(String str) {
