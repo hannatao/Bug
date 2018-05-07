@@ -62,6 +62,13 @@ public class BugHistoryDao {
 	    mongoOps.remove(query,BugHistory.class);
 	}
 	
+	//根据ids删除文档
+	public void remove(List<String> ids){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids));
+		mongoOps.remove(query,BugHistory.class);
+	}
+	
 	//根据id查找
 	public BugHistory findParent(String id){
 		Query query = new Query();

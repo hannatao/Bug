@@ -21,6 +21,20 @@ public class BugPageDao {
 	    mongoOperations.save(page);
 	}
 	
+	//根据id删除文档
+	public void remove(String id){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		mongoOperations.remove(query,BugPage.class);
+	}
+	
+	//根据ids删除文档
+	public void remove(List<String> ids){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids));
+		mongoOperations.remove(query,BugPage.class);
+	}
+	
 	public BugPage findByid(String id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));

@@ -35,6 +35,13 @@ public class BugDao {
 	    mongoOperations.remove(query,Bug.class);
 	}
 	
+	//根据ids删除文档
+	public void remove(List<String> ids){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids));
+		mongoOperations.remove(query,Bug.class);
+	}
+	
 	//根据report_id查找所有的Bug
 	public List<String> findByReport(String report_id) {
 		List<String> result = new ArrayList<String>();

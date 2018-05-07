@@ -30,6 +30,13 @@ public class BugMirrorDao {
 	    mongoOperations.remove(query,BugMirror.class);
 	}
 	
+	//根据ids删除文档
+	public void remove(List<String> ids){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids));
+		mongoOperations.remove(query,BugMirror.class);
+	}
+	
 	public List<BugMirror> findByCase(String case_take_id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
