@@ -21,6 +21,9 @@ public class HistoryService {
 	@Autowired
 	BugMirrorDao mirrordao;
 	
+	@Autowired
+	RecommendService recservice;
+	
 	public BugHistory getHistory(String id) {
 		return historydao.findByid(id);
 	}
@@ -40,8 +43,8 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<BugMirror> getNew() {
-		List<String> ids = historydao.findRoots();
+	public List<BugMirror> getNew(String case_take_id) {
+		List<String> ids = historydao.findRoots(recservice.getListIds(case_take_id));
 		List<String> filter = new ArrayList<String>();
 		if(ids.size() > 2) {
 			int n = ids.size();

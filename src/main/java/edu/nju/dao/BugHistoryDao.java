@@ -34,7 +34,7 @@ public class BugHistoryDao {
 	public List<String> findRoots(List<String> lists) {
 		if(lists == null || lists.size() == 0) {return null;}
 		Query query = new Query();
-		query.addCriteria(Criteria.where("_id").in(lists));
+		query.addCriteria(Criteria.where("_id").in(lists).and("parent").is("null"));
 		List<BugHistory> roots = mongoOps.find(query,BugHistory.class);
 		List<String> ids = new ArrayList<String>();
 		for(BugHistory root: roots) {

@@ -38,6 +38,15 @@ public class RecommendService {
 		return algorithm.sort(results);
 	}
 	
+	public List<String> getListIds (String case_take_id) {
+		List<BugMirror> results = mirrordao.findByCase(case_take_id);
+		List<String> lists = new ArrayList<String>();
+		for(BugMirror mirror: results) {
+			lists.add(mirror.getId());
+		}
+		return lists;
+	}
+	
 	public Bug getDetail (String id) {
 		return bugdao.findByid(id);
 	}
