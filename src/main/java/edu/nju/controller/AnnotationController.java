@@ -30,11 +30,11 @@ public class AnnotationController {
 	public void saveAnnotation(String id, String width, String height, @RequestParam("xs") String[] xs, @RequestParam("ys") String[] ys,HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			String result = "";
+			JSONObject result = new JSONObject();
 			if(anservice.save(id, width, height, xs, ys)) {
-				result = "200";
+				result.put("status", "200");
 			} else {
-				result = "500";
+				result.put("status", "500");
 			}
 			out.print(result);
 			out.flush();
@@ -54,7 +54,9 @@ public class AnnotationController {
 			if(result != null) {
 				out.print(new JSONObject(result));
 			} else {
-				out.print("500");
+				JSONObject temp = new JSONObject();
+				temp.put("status", "500");
+				out.print(temp);
 			}
 			out.flush();
 			out.close();
@@ -69,11 +71,11 @@ public class AnnotationController {
 	public void deleteAnnotation(String id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			String result = "";
+			JSONObject result = new JSONObject();
 			if(anservice.delete(id)) {
-				result = "200";
+				result.put("status", "200");
 			} else {
-				result = "500";
+				result.put("status", "500");
 			}
 			out.print(result);
 			out.flush();
