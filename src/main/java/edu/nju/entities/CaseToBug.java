@@ -1,5 +1,7 @@
 package edu.nju.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,10 +12,10 @@ public class CaseToBug {
 	@Id
 	private String id;
 	
-	private String bug_id;
+	private List<String> bug_id;
 	
 	@PersistenceConstructor
-	public CaseToBug(String id, String bug_id) {
+	public CaseToBug(String id, List<String> bug_id) {
 		this.id = id;
 		this.bug_id = bug_id;
 	}
@@ -26,11 +28,11 @@ public class CaseToBug {
 		this.id = id;
 	}
 
-	public String getBug_id() {
+	public List<String> getBug_id() {
 		return bug_id;
 	}
 
-	public void setBug_id(String bug_id) {
+	public void setBug_id(List<String> bug_id) {
 		this.bug_id = bug_id;
 	}
 	

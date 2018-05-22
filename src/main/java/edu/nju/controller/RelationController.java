@@ -37,9 +37,9 @@ public class RelationController {
 	
 	@RequestMapping(value = "/remove")
 	@ResponseBody
-	public void removeCTB(String bug_id, HttpServletResponse response) {
+	public void removeCTB(String useCase, String bug_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		if(ctbservice.remove(bug_id)) {result.put("status", "200");}
+		if(ctbservice.remove(useCase, bug_id)) {result.put("status", "200");}
 		else {result.put("status", "500");}
 		try {
 			PrintWriter out = response.getWriter();

@@ -68,10 +68,8 @@ public class BugDao {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		List<Bug> list = mongoOperations.find(query,Bug.class);
-		if(list != null) {
-			return list.get(0);
-		}
-		return null;
+		if(list.size() == 0 || list == null) {return null;}
+		return list.get(0);
 	}
 	
 	//case条件查询，find查询所有

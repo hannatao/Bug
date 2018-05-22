@@ -1,5 +1,6 @@
 package edu.nju.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,38 @@ public class CTBDao {
 		mongoOperations.save(ctb);
 	}
 	
-	public List<CaseToBug> findById(String id) {
+	public void save(String useCase, String bug_id) {
 		Query query = new Query();
-	    query.addCriteria(Criteria.where("_id").is(id));
-	    return mongoOperations.find(query, CaseToBug.class);
+		query.addCriteria(Criteria.where("_id").is(useCase));
+		List<CaseToBug> result = mongoOperations.find(query, CaseToBug.class);
+		if(result.size() != 0) {
+			CaseToBug ctb = result.get(0);
+			ctb.getBug_id().add(bug_id);
+			mongoOperations.save(ctb);
+		} else {
+			List<String> list = new ArrayList<String>();
+			list.add(bug_id);
+			CaseToBug ctb = new CaseToBug(useCase, list);
+			mongoOperations.save(ctb);
+		}
+		
 	}
 	
-	public void remove(String bug_id) {
+	public List<String> findById(String id) {
 		Query query = new Query();
-	    query.addCriteria(Criteria.where("bug_id").is(bug_id));
-	    mongoOperations.remove(query, CaseToBug.class);
+	    query.addCriteria(Criteria.where("_id").is(id));
+	    List<CaseToBug> result = mongoOperations.find(query, CaseToBug.class);
+	    if(result.size() == 0 || result == null) {return null;}
+	    return result.get(0).getBug_id();
+	    
+	}
+	
+	public void remove(String useCase, String bug_id) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("_id").is(useCase));
+	    CaseToBug result = mongoOperations.find(query, CaseToBug.class).get(0);
+	    result.getBug_id().remove(bug_id);
+	    mongoOperations.save(result);
 	}
 	
 	public void removeAll(String useCase) {
