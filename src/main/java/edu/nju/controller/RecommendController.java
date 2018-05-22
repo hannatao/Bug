@@ -105,9 +105,9 @@ public class RecommendController {
 				mirrors.addAll(recservice.recommandByTitle(content, session));
 			} else {
 				if(type.contains("page")) {
-					mirrors.addAll(recservice.recommndByPage(case_take_id, type, content, session));
+					mirrors.addAll(recservice.recommndByPage(case_take_id, type, content, true, session));
 				} else {
-					mirrors.addAll(recservice.recommend(case_take_id, type, content, session));
+					mirrors.addAll(recservice.recommend(case_take_id, type, content, true, session));
 				}
 				List<String> reports = new ArrayList<String>();
 				reports.add((String)session.getAttribute("report"));

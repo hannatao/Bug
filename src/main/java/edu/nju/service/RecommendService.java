@@ -1,8 +1,9 @@
 package edu.nju.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpSession;
@@ -65,18 +66,17 @@ public class RecommendService {
 	
 	//根据bug的本质三属性进行推荐
 	@SuppressWarnings("unchecked")
-	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session) {
+	public List<BugMirror> recommend (String case_take_id, String type, String content, boolean flag, HttpSession session) {
 		
-		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("rec") == null) {
 			results = findByNothing(case_take_id, type, content);
-			HashMap<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put(type, content);
 			session.setAttribute("path", map);
 		} else {
-			HashMap<String, String> map = (HashMap<String, String>)session.getAttribute("path");
+			Map<String, String> map = (Map<String, String>)session.getAttribute("path");
 			if(map.containsKey(type)) {
 				return pathExist(case_take_id, type, content, session, map);
 			}
@@ -86,32 +86,30 @@ public class RecommendService {
 		}
 		
 		session.setAttribute("rec", results);
-		if(results != null) {return algorithm.sort(results);}
+		if(flag) {
+			Algorithm algorithm = new Algorithm_1();
+			if(results != null) {return algorithm.sort(results);}
+		}
 		return results;
 	}
 	
 	//根据页面进行推荐
 	@SuppressWarnings("unchecked")
-	public List<BugMirror> recommndByPage(String case_take_id, String type, String content, HttpSession session){
+	public List<BugMirror> recommndByPage(String case_take_id, String type, String content, boolean flag, HttpSession session){
 		
-		Algorithm algorithm = new Algorithm_1();
 		List<BugPage> results = new ArrayList<BugPage>();
 		List<BugMirror> mirrors = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("page") == null) {
 			results = findPages(case_take_id, type, content);
 			mirrors = findMirror(getIds(results));
-			HashMap<String, String> map = new HashMap<String, String>();
+			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put(type, content);
 			session.setAttribute("path", map);
 		} else {
-			HashMap<String, String> map = (HashMap<String, String>)session.getAttribute("path");
+			Map<String, String> map = (Map<String, String>)session.getAttribute("path");
 			if(map.containsKey(type)) {
-				results = findPages(case_take_id, type, content);
-				mirrors = findMirror(getIds(results));
-				HashMap<String, String> new_map = new HashMap<String, String>();
-				new_map.put(type, content);
-				session.setAttribute("path", new_map);
+				return pathExist(case_take_id, type, content, session, map);
 			} else {
 				map.put(type, content);
 				session.setAttribute("path", map);
@@ -123,7 +121,11 @@ public class RecommendService {
 		session.setAttribute("page", results);
 		session.setAttribute("rec", mirrors);
 		
-		if(mirrors != null) {return algorithm.sort(mirrors);}
+		if(flag) {
+			Algorithm algorithm = new Algorithm_1();
+			if(mirrors != null) {return algorithm.sort(mirrors);}
+		}
+		
 		return mirrors;
 	}
 	
@@ -134,9 +136,9 @@ public class RecommendService {
 		List<BugMirror> mirrors = new ArrayList<BugMirror>();
 		if(session.getAttribute("rec") == null) {
 			List<BugMirror> temp = mirrordao.findByCase((String)session.getAttribute("case"));
-			session.setAttribute("rec", temp);
+			if(temp != null) {session.setAttribute("rec", temp);}
 		}
-		mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));
+		if(session.getAttribute("rec") != null) {mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));}
 		return mirrors;
 	}
 	
@@ -237,24 +239,23 @@ public class RecommendService {
 		return ids;
 	}
 	
-	//判断该选项是否已经选择过，如过选择过则重新数据库取值，否则缓存中获取
-	private List<BugMirror> pathExist(String case_take_id, String type, String content, HttpSession session, HashMap<String, String> map){
+	//该选项已经选择过
+	private List<BugMirror> pathExist(String case_take_id, String type, String content, HttpSession session, Map<String, String> map){
+		session.removeAttribute("rec");
+		session.removeAttribute("path");
+		session.removeAttribute("page");
 		List<BugMirror> results = new ArrayList<BugMirror>();
-		results = findByNothing(case_take_id, type, content);
 		Algorithm algorithm = new Algorithm_1();
-		boolean flag = true;
-		map.put(type, content);
 		for(Entry<String, String> entry: map.entrySet()) {
-			if(!type.contains("page")) {
-				if(flag) {
-					results = findByNothing(case_take_id, entry.getKey(), entry.getValue());
-				} else {
-					results = findByNow(entry.getKey(), entry.getValue(), results);
-				}
+			if(entry.getKey().equals(type)) {break;}
+			if(!entry.getKey().contains("page")) {
+				results = recommend(case_take_id, entry.getKey(), entry.getValue(), false, session);
+			} else {
+				results = recommndByPage(case_take_id, entry.getKey(), entry.getValue(), false, session);
 			}
 		}
-		session.setAttribute("rec", results);
-		session.setAttribute("path", map);;
+		if(!type.contains("page")) {results = recommend(case_take_id, type, content, true, session);}
+		else {results = recommndByPage(case_take_id, type, content, true, session);}
 		return algorithm.sort(results);
 	}
 	
