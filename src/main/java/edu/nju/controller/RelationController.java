@@ -35,11 +35,27 @@ public class RelationController {
 		}
 	}
 	
-	@RequestMapping(value = "/removeCTB")
+	@RequestMapping(value = "/remove")
 	@ResponseBody
-	public void removeCTB(String id, HttpServletResponse response) {
+	public void removeCTB(String bug_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		if(ctbservice.remove(id)) {result.put("status", "200");}
+		if(ctbservice.remove(bug_id)) {result.put("status", "200");}
+		else {result.put("status", "500");}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/removeAll")
+	@ResponseBody
+	public void removeCase(String useCase, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(ctbservice.removeAll(useCase)) {result.put("status", "200");}
 		else {result.put("status", "500");}
 		try {
 			PrintWriter out = response.getWriter();

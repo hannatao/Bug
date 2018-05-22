@@ -1,6 +1,7 @@
 package edu.nju.entities;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -10,7 +11,8 @@ public class CaseToBug {
 	private String id;
 	
 	private String bug_id;
-
+	
+	@PersistenceConstructor
 	public CaseToBug(String id, String bug_id) {
 		this.id = id;
 		this.bug_id = bug_id;

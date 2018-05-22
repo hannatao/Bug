@@ -63,6 +63,7 @@ public class RecommendService {
 		return bugdao.findByid(id).getReport_id();
 	}
 	
+	//根据bug的本质三属性进行推荐
 	@SuppressWarnings("unchecked")
 	public List<BugMirror> recommend (String case_take_id, String type, String content, HttpSession session) {
 		
@@ -89,6 +90,7 @@ public class RecommendService {
 		return results;
 	}
 	
+	//根据页面进行推荐
 	@SuppressWarnings("unchecked")
 	public List<BugMirror> recommndByPage(String case_take_id, String type, String content, HttpSession session){
 		
@@ -125,19 +127,20 @@ public class RecommendService {
 		return mirrors;
 	}
 	
+	//根据Title进行文本匹配
 	@SuppressWarnings("unchecked")
 	public List<BugMirror> recommandByTitle(String content, HttpSession session){
 		StringMatch match = new StringMatch();
 		List<BugMirror> mirrors = new ArrayList<BugMirror>();
-		if(session.getAttribute("rec") != null) {
-			mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));
+		if(session.getAttribute("rec") == null) {
+			List<BugMirror> temp = mirrordao.findByCase((String)session.getAttribute("case"));
+			session.setAttribute("rec", temp);
 		}
-		if(session.getAttribute("pages") != null) {
-			mirrors.addAll(match.match(content, findMirror(getIds((List<BugPage>) session.getAttribute("page")))));
-		}
+		mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));
 		return mirrors;
 	}
 	
+	//从缓存中获取
 	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		switch(type) {
@@ -159,7 +162,8 @@ public class RecommendService {
 		}
 		return results;
 	}
-	
+
+	//从数据库中获取
 	private List<BugMirror> findByNothing(String case_take_id, String type, String content){
 		switch(type) {
 			case "bug_category":
@@ -172,6 +176,7 @@ public class RecommendService {
 		return null;
 	}
 	
+	//从数据库中查找页面
 	private List<BugPage> findPages(String case_take_id, String type, String content){
 		switch(type) {
 			case "page1":
@@ -184,6 +189,7 @@ public class RecommendService {
 		return null;
 	}
 	
+	//从缓存中查找页面
 	private List<BugPage> findByPages(String type, String content, List<BugPage> lists){
 		List<BugPage> results = new ArrayList<BugPage>();
 		switch(type) {
@@ -206,12 +212,14 @@ public class RecommendService {
 		return results;
 	}
 	
+	//从数据库中获取指定id的bug
 	private List<BugMirror> findMirror(List<String> ids){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		results = mirrordao.findByIds(ids);
 		return results;
 	}
 	
+	//从缓存中进行筛选符合条件的
 	private List<BugMirror> findByMirror(List<String> ids, List<BugMirror> lists){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		for(BugMirror mirror : lists) {
@@ -220,6 +228,7 @@ public class RecommendService {
 		return results;
 	}
 	
+	//根据页面获取bug_id
 	private List<String> getIds(List<BugPage> pages) {
 		List<String> ids = new ArrayList<String>();
 		for(int i = 0; i < pages.size(); i ++) {
@@ -228,6 +237,7 @@ public class RecommendService {
 		return ids;
 	}
 	
+	//判断该选项是否已经选择过，如过选择过则重新数据库取值，否则缓存中获取
 	private List<BugMirror> pathExist(String case_take_id, String type, String content, HttpSession session, HashMap<String, String> map){
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		results = findByNothing(case_take_id, type, content);

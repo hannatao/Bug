@@ -42,4 +42,13 @@ public class CTBService {
 			return false;
 		}
 	}
+	
+	public boolean removeAll(String useCase) {
+		try {
+			ctbdao.removeAll(useCase);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

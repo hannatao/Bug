@@ -31,4 +31,10 @@ public class CTBDao {
 	    query.addCriteria(Criteria.where("bug_id").is(bug_id));
 	    mongoOperations.remove(query, CaseToBug.class);
 	}
+	
+	public void removeAll(String useCase) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(useCase));
+		mongoOperations.remove(query, CaseToBug.class);
+	}
 }
