@@ -67,6 +67,10 @@ public class HistoryService {
 		return result;
 	}
 	
+	public List<String> getTrees() {
+		return historydao.findRoots();
+	}
+	
 	public void dfs(BugHistory root, List<List<String>> result, List<String> list) {
 		List<String> children = root.getChildren();
 		if(children.size() != 0) {

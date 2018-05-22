@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.nju.service.CTBService;
 import edu.nju.service.SaveService;
 
 @Controller
@@ -23,12 +24,15 @@ public class UploadController {
 	@Autowired
 	SaveService saveservice;
 	
+	@Autowired
+	CTBService ctbservice;
+	
 	//上传新的Bug报告
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	@ResponseBody
-	public void submit(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
+	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		if(saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page)) {
+		if(saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page) && ctbservice.save(useCase, id)) {
 			result.put("status", "200");
 		} else {
 			result.put("status", "500");

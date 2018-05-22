@@ -68,6 +68,7 @@ public class SaveService {
 			return false;
 		}
 	}
+	
 	public boolean confirm(String id, String report_id) {
 		try {
 			if(mirrordao.haveJudged(id, report_id)) {

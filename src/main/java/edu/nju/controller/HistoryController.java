@@ -51,4 +51,18 @@ public class HistoryController {
 			e.printStackTrace();
 		}
 	}
+	
+	@RequestMapping(value = "/getTrees")
+	@ResponseBody
+	public void getTrees(HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(new JSONArray(hisservice.getTrees()));
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
