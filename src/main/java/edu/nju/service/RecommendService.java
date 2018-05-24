@@ -245,7 +245,6 @@ public class RecommendService {
 		session.removeAttribute("path");
 		session.removeAttribute("page");
 		List<BugMirror> results = new ArrayList<BugMirror>();
-		Algorithm algorithm = new Algorithm_1();
 		for(Entry<String, String> entry: map.entrySet()) {
 			if(entry.getKey().equals(type)) {break;}
 			if(!entry.getKey().contains("page")) {
@@ -256,7 +255,7 @@ public class RecommendService {
 		}
 		if(!type.contains("page")) {results = recommend(case_take_id, type, content, true, session);}
 		else {results = recommndByPage(case_take_id, type, content, true, session);}
-		return algorithm.sort(results);
+		return results;
 	}
 	
 	private int severityTranse(String str) {

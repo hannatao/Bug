@@ -36,5 +36,4 @@ public class CaseToBug {
 		this.bug_id = bug_id;
 	}
 	
-	
 }

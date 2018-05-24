@@ -27,8 +27,10 @@ public class CTBDao {
 		List<CaseToBug> result = mongoOperations.find(query, CaseToBug.class);
 		if(result.size() != 0) {
 			CaseToBug ctb = result.get(0);
-			ctb.getBug_id().add(bug_id);
-			mongoOperations.save(ctb);
+			if(!ctb.getBug_id().contains(bug_id)) {
+				ctb.getBug_id().add(bug_id);
+				mongoOperations.save(ctb);
+			}
 		} else {
 			List<String> list = new ArrayList<String>();
 			list.add(bug_id);
