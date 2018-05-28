@@ -18,12 +18,14 @@ public class BugMirror {
 	@Indexed
 	private String bug_category;
 	
+	private String report_id;
+	
 	@Indexed
 	private int severity;
 	
 	@Indexed
 	private int recurrent;
-
+	
 	private String title;
 	
 	private Set<String> good;
@@ -33,7 +35,7 @@ public class BugMirror {
 	private String img_url;
 	
 	@PersistenceConstructor
-	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, Set<String> good, Set<String> bad) {
+	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, Set<String> good, Set<String> bad, String report_id) {
 		this.id = id;
 		this.case_take_id = case_take_id;
 		this.bug_category = bug_category;
@@ -43,6 +45,7 @@ public class BugMirror {
 		this.img_url = img_url;
 		this.bad = bad;
 		this.good = good;
+		this.report_id = report_id;
 	}
 	
 	public String getId() {
@@ -115,5 +118,13 @@ public class BugMirror {
 
 	public void setBad(Set<String> bad) {
 		this.bad = bad;
+	}
+
+	public String getReport_id() {
+		return report_id;
+	}
+
+	public void setReport_id(String report_id) {
+		this.report_id = report_id;
 	}
 }

@@ -1,5 +1,6 @@
 package edu.nju.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,28 +44,41 @@ public class BugMirrorDao {
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<BugMirror> findByCategory(String case_take_id, String bug_category){
+	public List<BugMirror> findByCase(String case_take_id, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("bug_category").is(bug_category));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("report_id").nin(report_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<BugMirror> findBySeverity(String case_take_id, int severity){
+	public List<BugMirror> findByCategory(String case_take_id, String bug_category, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("bug_category").is(bug_category).and("report_id").nin(report_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<BugMirror> findByRecurrent(String case_take_id, int recurrent){
+	public List<BugMirror> findBySeverity(String case_take_id, int severity, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity).and("report_id").nin(report_id));
+		return mongoOperations.find(query, BugMirror.class);
+	}
+	
+	public List<BugMirror> findByRecurrent(String case_take_id, int recurrent, String report_id){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent).and("report_id").nin(report_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
 	public List<BugMirror> findByIds(List<String> ids){
-		if(ids == null || ids.size() == 0) {return null;}
+		if(ids == null || ids.size() == 0) {return new ArrayList<BugMirror>();}
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").in(ids));
+		return mongoOperations.find(query, BugMirror.class);
+	}
+	
+	public List<BugMirror> findByIds(List<String> ids, String report_id){
+		if(ids == null || ids.size() == 0) {return new ArrayList<BugMirror>();}
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids).and("report_id").nin(report_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	

@@ -34,7 +34,7 @@ public class UploadController {
 		JSONObject result = new JSONObject();
 		boolean flag = false;
 		flag = saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page);
-		if(!useCase.equals("null")) {flag = flag && ctbservice.save(useCase, id);}
+		if(!useCase.equals("null")) {flag = flag && ctbservice.save(useCase, id, case_take_id, report_id);}
 		if(flag) {result.put("status", "200");}
 		else {result.put("status", "500");}
 		try {

@@ -33,9 +33,9 @@ public class RecommendService {
 	@Autowired
 	BugPageDao pagedao;
 	
-	public List<BugMirror> getList (String case_take_id) {
+	public List<BugMirror> getList (String case_take_id, String report_id) {
 		Algorithm algorithm = new Algorithm_1();
-		List<BugMirror> results = mirrordao.findByCase(case_take_id);
+		List<BugMirror> results = mirrordao.findByCase(case_take_id, report_id);
 		return algorithm.sort(results);
 	}
 	
@@ -71,7 +71,7 @@ public class RecommendService {
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("rec") == null) {
-			results = findByNothing(case_take_id, type, content);
+			results = findByNothing(case_take_id, type, content, (String)session.getAttribute("report"));
 			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put(type, content);
 			session.setAttribute("path", map);
@@ -102,7 +102,7 @@ public class RecommendService {
 		
 		if(session.getAttribute("page") == null) {
 			results = findPages(case_take_id, type, content);
-			mirrors = findMirror(getIds(results));
+			mirrors = findMirror(getIds(results), (String)session.getAttribute("report"));
 			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put(type, content);
 			session.setAttribute("path", map);
@@ -135,7 +135,7 @@ public class RecommendService {
 		StringMatch match = new StringMatch();
 		List<BugMirror> mirrors = new ArrayList<BugMirror>();
 		if(session.getAttribute("rec") == null) {
-			List<BugMirror> temp = mirrordao.findByCase((String)session.getAttribute("case"));
+			List<BugMirror> temp = mirrordao.findByCase((String)session.getAttribute("case"), (String)session.getAttribute("report"));
 			if(temp != null) {session.setAttribute("rec", temp);}
 		}
 		if(session.getAttribute("rec") != null) {mirrors.addAll(match.match(content, (List<BugMirror>)session.getAttribute("rec")));}
@@ -166,14 +166,14 @@ public class RecommendService {
 	}
 
 	//从数据库中获取
-	private List<BugMirror> findByNothing(String case_take_id, String type, String content){
+	private List<BugMirror> findByNothing(String case_take_id, String type, String content, String report_id){
 		switch(type) {
 			case "bug_category":
-				return mirrordao.findByCategory(case_take_id, content);
+				return mirrordao.findByCategory(case_take_id, content, report_id);
 			case "severity":
-				return mirrordao.findBySeverity(case_take_id, severityTranse(content));
+				return mirrordao.findBySeverity(case_take_id, severityTranse(content), report_id);
 			case "recurrent":
-				return mirrordao.findByRecurrent(case_take_id, recurrentTranse(content));
+				return mirrordao.findByRecurrent(case_take_id, recurrentTranse(content), report_id);
 		}
 		return null;
 	}
@@ -215,9 +215,9 @@ public class RecommendService {
 	}
 	
 	//从数据库中获取指定id的bug
-	private List<BugMirror> findMirror(List<String> ids){
+	private List<BugMirror> findMirror(List<String> ids, String report_id){
 		List<BugMirror> results = new ArrayList<BugMirror>();
-		results = mirrordao.findByIds(ids);
+		results = mirrordao.findByIds(ids, report_id);
 		return results;
 	}
 	

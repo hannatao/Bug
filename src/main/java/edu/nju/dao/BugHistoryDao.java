@@ -32,7 +32,7 @@ public class BugHistoryDao {
 	
 	//查找所有指定的根
 	public List<String> findRoots(List<String> lists) {
-		if(lists == null || lists.size() == 0) {return null;}
+		if(lists == null || lists.size() == 0) {return new ArrayList<String>();}
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").in(lists).and("parent").is("null"));
 		List<BugHistory> roots = mongoOps.find(query,BugHistory.class);

@@ -13,9 +13,9 @@ public class CTBService {
 	@Autowired
 	CTBDao ctbdao;
 	
-	public boolean save(String useCase, String bug_id) {
+	public boolean save(String useCase, String bug_id, String case_take_id, String report_id) {
 		try {
-			ctbdao.save(useCase, bug_id);
+			ctbdao.save(useCase, bug_id, case_take_id, report_id);
 			return true;
 		} catch (Exception e) {
 			return false;

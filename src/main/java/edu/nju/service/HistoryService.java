@@ -43,7 +43,7 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<BugMirror> getNew(String case_take_id) {
+	public List<BugMirror> getNew(String case_take_id, String report_id) {
 		List<String> ids = historydao.findRoots(recservice.getListIds(case_take_id));
 		List<String> filter = new ArrayList<String>();
 		if(ids.size() > 2) {
@@ -55,7 +55,7 @@ public class HistoryService {
 				filter.add(id);
 			}
 		}
-		return mirrordao.findByIds(filter);
+		return mirrordao.findByIds(filter, report_id);
 	}
 	
 	public List<List<String>> getDepth(String id) {

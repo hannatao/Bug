@@ -12,12 +12,18 @@ public class CaseToBug {
 	@Id
 	private String id;
 	
+	private String case_take_id;
+	
+	private String report_id;
+	
 	private List<String> bug_id;
 	
 	@PersistenceConstructor
-	public CaseToBug(String id, List<String> bug_id) {
+	public CaseToBug(String id, List<String> bug_id, String case_take_id, String report_id) {
 		this.id = id;
 		this.bug_id = bug_id;
+		this.case_take_id = case_take_id;
+		this.report_id = report_id;
 	}
 
 	public String getId() {
@@ -34,6 +40,22 @@ public class CaseToBug {
 
 	public void setBug_id(List<String> bug_id) {
 		this.bug_id = bug_id;
+	}
+
+	public String getCase_take_id() {
+		return case_take_id;
+	}
+
+	public void setCase_take_id(String case_take_id) {
+		this.case_take_id = case_take_id;
+	}
+
+	public String getReport_id() {
+		return report_id;
+	}
+
+	public void setReport_id(String report_id) {
+		this.report_id = report_id;
 	}
 	
 }

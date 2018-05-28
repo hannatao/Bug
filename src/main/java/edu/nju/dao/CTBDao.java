@@ -21,7 +21,7 @@ public class CTBDao {
 		mongoOperations.save(ctb);
 	}
 	
-	public void save(String useCase, String bug_id) {
+	public void save(String useCase, String bug_id, String case_take_id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(useCase));
 		List<CaseToBug> result = mongoOperations.find(query, CaseToBug.class);
@@ -34,7 +34,7 @@ public class CTBDao {
 		} else {
 			List<String> list = new ArrayList<String>();
 			list.add(bug_id);
-			CaseToBug ctb = new CaseToBug(useCase, list);
+			CaseToBug ctb = new CaseToBug(useCase, list, case_take_id, report_id);
 			mongoOperations.save(ctb);
 		}
 		
@@ -44,9 +44,21 @@ public class CTBDao {
 		Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
 	    List<CaseToBug> result = mongoOperations.find(query, CaseToBug.class);
-	    if(result.size() == 0 || result == null) {return null;}
+	    if(result.size() == 0 || result == null) {return new ArrayList<String>();}
 	    return result.get(0).getBug_id();
 	    
+	}
+	
+	public List<CaseToBug> findByCase(String case_take_id) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
+	    return mongoOperations.find(query, CaseToBug.class);
+	}
+	
+	public List<CaseToBug> findByReport(String report_id) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("report_id").is(report_id));
+	    return mongoOperations.find(query, CaseToBug.class);
 	}
 	
 	public void remove(String useCase, String bug_id) {

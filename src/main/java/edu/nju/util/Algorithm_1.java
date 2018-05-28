@@ -9,7 +9,7 @@ import edu.nju.entities.BugMirror;
 public class Algorithm_1 implements Algorithm{
 	
 	public List<BugMirror> sort(BugMirror sample, List<BugMirror> lists){
-		
+		if(lists == null || lists.size() == 0) {return lists;}
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		lists.sort(new Comparator<BugMirror>() {
@@ -24,6 +24,7 @@ public class Algorithm_1 implements Algorithm{
 	}
 	
 	public List<BugMirror> sort(List<BugMirror> lists){
+		if(lists == null || lists.size() == 0) {return lists;}
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		lists.sort(new Comparator<BugMirror>() {
