@@ -72,13 +72,11 @@ public class AnalyzeService {
 		
 		int parent = 0;
 		if(!history.getParent().equals("null")) {
-			parent = grades.get(history.getParent());
+			parent = grades.getOrDefault(history.getParent(), 0);
 		}
 		int count = 0;
 		for(String child : history.getChildren()) {
-			if(grades.get(child) <= 2) {
-				count ++;
-			}
+			if(grades.getOrDefault(child, 3) <= 2) {count ++;}
 		}
 		
 		switch(grade) {

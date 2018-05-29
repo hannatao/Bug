@@ -50,6 +50,20 @@ public class AnalyzeController {
 		}
 	}
 	
+	@RequestMapping(value = "/users")
+	@ResponseBody
+	public void getUsers(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(new JSONObject(aservice.getReports(case_take_id)));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping(value = "/grade")
 	@ResponseBody
 	public void getGrade(String id, HttpServletResponse response) {
