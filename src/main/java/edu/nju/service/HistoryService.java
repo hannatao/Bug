@@ -24,6 +24,9 @@ public class HistoryService {
 	@Autowired
 	RecommendService recservice;
 	
+	@Autowired
+	AnalyzeService aservice;
+	
 	public BugHistory getHistory(String id) {
 		return historydao.findByid(id);
 	}
@@ -67,8 +70,8 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<String> getTrees() {
-		return historydao.findRoots();
+	public List<String> getTrees(String case_take_id) {
+		return historydao.findRoots(aservice.getValid(case_take_id));
 	}
 	
 	public void dfs(BugHistory root, List<List<String>> result, List<String> list) {

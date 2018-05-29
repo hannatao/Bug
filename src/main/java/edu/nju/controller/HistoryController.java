@@ -54,10 +54,10 @@ public class HistoryController {
 	
 	@RequestMapping(value = "/getTrees")
 	@ResponseBody
-	public void getTrees(HttpServletResponse response) {
+	public void getTrees(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONArray(hisservice.getTrees()));
+			out.print(new JSONArray(hisservice.getTrees(case_take_id)));
 			out.flush();
 			out.close();
 		} catch (IOException e) {
