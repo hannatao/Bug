@@ -1,6 +1,7 @@
 package edu.nju.controller;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,24 @@ public class AnalyzeController {
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(new JSONArray(aservice.getValid(case_take_id)));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/thums")
+	@ResponseBody
+	public void getThums(String case_take_id, HttpServletResponse response) {
+		try {
+			JSONObject result = new JSONObject();
+			PrintWriter out = response.getWriter();
+			Map<String, String> map = aservice.getThums(case_take_id);
+			result.put("Count", map.size());
+			result.put("Detail", new JSONObject(map));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (Exception e) {
@@ -89,6 +108,20 @@ public class AnalyzeController {
 			else {result.put("status", "500");}
 			PrintWriter out = response.getWriter();
 			out.print(result);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/bugDetail")
+	@ResponseBody
+	public void getDetail(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(new JSONObject(aservice.getBugDetail(case_take_id)));
 			out.flush();
 			out.close();
 		} catch (Exception e) {

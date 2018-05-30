@@ -70,7 +70,7 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<String> getTrees(String case_take_id) {
+	public List<String> getRoots(String case_take_id) {
 		return historydao.findRoots(aservice.getValid(case_take_id));
 	}
 	

@@ -2,6 +2,8 @@ package edu.nju.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,12 +54,37 @@ public class HistoryController {
 		}
 	}
 	
+	@RequestMapping(value = "/getRoots")
+	@ResponseBody
+	public void getRoots(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			List<String> list = hisservice.getRoots(case_take_id);
+			result.put("Count", list.size());
+			result.put("TreeRoot", new JSONArray(list));
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping(value = "/getTrees")
 	@ResponseBody
 	public void getTrees(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONArray(hisservice.getTrees(case_take_id)));
+			JSONObject result = new JSONObject();
+			List<String> list = new ArrayList<String>();
+			for(String id : hisservice.getRoots(case_take_id)) {
+				if(hisservice.getHistory(id).getChildren().size() > 0) {list.add(id);}
+			}
+			result.put("Count", list.size());
+			result.put("TreeRoot", new JSONArray(list));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (IOException e) {

@@ -8,10 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.nju.dao.BugDao;
 import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
 import edu.nju.dao.BugScoreDao;
 import edu.nju.dao.CTBDao;
+import edu.nju.entities.Bug;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
 import edu.nju.entities.BugScore;
@@ -31,6 +33,9 @@ public class AnalyzeService {
 	
 	@Autowired
 	BugMirrorDao mdao;
+	
+	@Autowired
+	BugDao bdao;
 	
 	public List<String> getValid(String case_take_id) {
 		List<String> result = new ArrayList<String>();
@@ -113,6 +118,7 @@ public class AnalyzeService {
 		for(String bug: bugs) {
 			BugMirror mirror = mdao.findById(bug);
 			int grade = grades.get(bug);
+			if(grade == 0) {continue;}
 			if(grade == 1) {ThumsUp(5, result, mirror);}
 			else if(grade == 2) {ThumsUp(3, result, mirror);}
 			else {ThumsUp(-3, result, mirror);}
@@ -128,5 +134,28 @@ public class AnalyzeService {
 		for(String report : mirror.getBad()) {
 			result.put(report, result.getOrDefault(report, 0) - grade);
 		}
+	}
+	
+	public Map<String, String> getThums(String case_take_id) {
+		Map<String, String> result = new HashMap<String, String>();
+		List<String> bugs = getValid(case_take_id);
+		for(String bug: bugs) {
+			BugMirror mirror = mdao.findById(bug);
+			if(mirror.getGood().size() > 0 || mirror.getBad().size() > 0) {
+				result.put(bug, mirror.getGood().size() + "," + mirror.getBad().size());
+			}
+		}
+		return result;
+	}
+	
+	public Map<String, Integer> getBugDetail(String case_take_id) {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		List<String> bugs = getValid(case_take_id);
+		for(String id : bugs) {
+			Bug bug = bdao.findByid(id);
+			result.put(bug.getBug_category(), result.getOrDefault(bug.getBug_category(), 0) + 1);
+			result.put(bug.getBug_page(), result.getOrDefault(bug.getBug_page(), 0) + 1);
+		}
+		return result;
 	}
 }
