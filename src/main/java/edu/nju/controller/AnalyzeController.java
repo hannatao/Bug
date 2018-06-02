@@ -1,6 +1,7 @@
 package edu.nju.controller;
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +24,17 @@ public class AnalyzeController {
 	@Autowired
 	AnalyzeService aservice;
 	
+	//根据用例获取所有有效bug
 	@RequestMapping(value = "/valid")
 	@ResponseBody
 	public void getValid(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONArray(aservice.getValid(case_take_id)));
+			JSONObject result = new JSONObject();
+			List<String> list = aservice.getValid(case_take_id);
+			result.put("Count", list.size());
+			result.put("Detail", new JSONArray(list));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (Exception e) {
@@ -37,6 +43,7 @@ public class AnalyzeController {
 		}
 	}
 	
+	//获取所有有点赞记录的bug
 	@RequestMapping(value = "/thums")
 	@ResponseBody
 	public void getThums(String case_take_id, HttpServletResponse response) {
@@ -55,6 +62,7 @@ public class AnalyzeController {
 		}
 	}
 	
+	//算出每个人的分数
 	@RequestMapping(value = "/scores")
 	@ResponseBody
 	public void getScores(String case_take_id, HttpServletResponse response) {
@@ -69,12 +77,13 @@ public class AnalyzeController {
 		}
 	}
 	
+	//获取所有的参与用户
 	@RequestMapping(value = "/users")
 	@ResponseBody
 	public void getUsers(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONObject(aservice.getReports(case_take_id)));
+			out.print(new JSONArray(aservice.getReports(case_take_id)));
 			out.flush();
 			out.close();
 		} catch (Exception e) {
@@ -83,6 +92,7 @@ public class AnalyzeController {
 		}
 	}
 	
+	//获取指定bug的打分等级
 	@RequestMapping(value = "/grade")
 	@ResponseBody
 	public void getGrade(String id, HttpServletResponse response) {
@@ -99,6 +109,7 @@ public class AnalyzeController {
 		}
 	}
 	
+	//存储单个bug的打分等级
 	@RequestMapping(value = "/save")
 	@ResponseBody
 	public void saveGrade(String id, String grade, HttpServletResponse response) {
@@ -116,12 +127,51 @@ public class AnalyzeController {
 		}
 	}
 	
+	//获取页面和种类的分布情况
 	@RequestMapping(value = "/bugDetail")
 	@ResponseBody
 	public void getDetail(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(new JSONObject(aservice.getBugDetail(case_take_id)));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//获取所有打分等级
+	@RequestMapping(value = "/allGrades")
+	@ResponseBody
+	public void getAllGrades(String case_take_id, HttpServletResponse response) {
+		try {
+			JSONObject result = new JSONObject();
+			Map<String, Integer> map = aservice.getAllGrades(case_take_id);
+			result.put("Count", map.size());
+			result.put("Detail", new JSONObject(map));
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//判断哪些还没有打分，split后面是用例表中不存在的bug
+	@RequestMapping(value = "/diff")
+	@ResponseBody
+	public void getDiff(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			List<String> list = aservice.getDiff(case_take_id);
+			result.put("Count", list.size());
+			result.put("Detail", new JSONArray(list));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (Exception e) {

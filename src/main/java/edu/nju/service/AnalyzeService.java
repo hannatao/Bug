@@ -42,7 +42,8 @@ public class AnalyzeService {
 		List<CaseToBug> lists = ctbdao.findByCase(case_take_id);
 		for(CaseToBug ctb : lists) {
 			for(String str: ctb.getBug_id()) {
-				if(!result.contains(str)) {result.add(str);}
+//				if(!result.contains(str)) {result.add(str);}
+				result.add(str);
 			}
 		}
 		return result;
@@ -157,5 +158,29 @@ public class AnalyzeService {
 			result.put(bug.getBug_page(), result.getOrDefault(bug.getBug_page(), 0) + 1);
 		}
 		return result;
+	}
+	
+	public Map<String, Integer> getAllGrades(String case_take_id) {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		List<BugMirror> mlist = mdao.findByCase(case_take_id);
+		List<String> idlist = new ArrayList<String>();
+		for(BugMirror mirror : mlist) {
+			idlist.add(mirror.getId());
+		}
+		List<BugScore> slist = bsdao.findByIds(idlist);
+		for(BugScore bugscore: slist) {
+			result.put(bugscore.getId(), bugscore.getGrade());
+		}
+		return result;
+	}
+	
+	public List<String> getDiff(String case_take_id) {
+		List<String> bugs = getValid(case_take_id);
+		bugs.add("split");
+		for(Map.Entry<String, Integer> entry: getAllGrades(case_take_id).entrySet()) {
+			if(bugs.contains(entry.getKey())) {bugs.remove(entry.getKey());}
+			else {bugs.add(entry.getKey());}
+		}
+		return bugs;
 	}
 }

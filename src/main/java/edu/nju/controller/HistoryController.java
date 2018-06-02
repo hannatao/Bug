@@ -40,6 +40,7 @@ public class HistoryController {
 		}
 	}
 	
+	//获取指定bug数的所有路径
 	@RequestMapping(value = "/getPath")
 	@ResponseBody
 	public void getPath(String id, HttpServletResponse response) {
@@ -54,6 +55,7 @@ public class HistoryController {
 		}
 	}
 	
+	//获取所有根节点
 	@RequestMapping(value = "/getRoots")
 	@ResponseBody
 	public void getRoots(String case_take_id, HttpServletResponse response) {
@@ -72,6 +74,7 @@ public class HistoryController {
 		}
 	}
 	
+	//获取所有形成树状结构的bug根节点
 	@RequestMapping(value = "/getTrees")
 	@ResponseBody
 	public void getTrees(String case_take_id, HttpServletResponse response) {

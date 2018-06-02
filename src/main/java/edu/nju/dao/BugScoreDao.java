@@ -1,5 +1,7 @@
 package edu.nju.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -24,5 +26,9 @@ public class BugScoreDao {
 	    return mongoOperations.find(query, BugScore.class).get(0);
 	}
 	
-	
+	public List<BugScore> findByIds(List<String> list) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("_id").in(list));
+	    return mongoOperations.find(query, BugScore.class);
+	}
 }
