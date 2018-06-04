@@ -21,6 +21,7 @@ public class DeleteController {
 	@Autowired
 	DeleteService deleteservice;
 	
+	//删除指定的case
 	@RequestMapping(value = "/case")
 	@ResponseBody
 	public void deleteCase(String case_take_id, HttpServletResponse response) {
@@ -35,6 +36,7 @@ public class DeleteController {
 		}
 	}
 	
+	//删除单条bug
 	@RequestMapping(value = "/one")
 	@ResponseBody
 	public void deleteOne(String id, HttpServletResponse response) {

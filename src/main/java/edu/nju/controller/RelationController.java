@@ -22,6 +22,7 @@ public class RelationController {
 	@Autowired
 	CTBService ctbservice;
 	
+	//获取用例下的所有bug
 	@RequestMapping(value = "/CTB")
 	@ResponseBody
 	public void getCTB(String useCase, HttpServletResponse response) {
@@ -35,6 +36,7 @@ public class RelationController {
 		}
 	}
 	
+	//删除单条bug
 	@RequestMapping(value = "/remove")
 	@ResponseBody
 	public void removeCTB(String useCase, String bug_id, HttpServletResponse response) {
@@ -51,6 +53,7 @@ public class RelationController {
 		}
 	}
 	
+	//删除一个用例下的所有bug
 	@RequestMapping(value = "/removeAll")
 	@ResponseBody
 	public void removeCase(String useCase, HttpServletResponse response) {

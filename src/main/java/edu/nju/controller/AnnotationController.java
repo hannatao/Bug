@@ -25,6 +25,7 @@ public class AnnotationController {
 	@Autowired
 	AnnotationService anservice;
 	
+	//存储标注信息
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveAnnotation(String id, String width, String height, @RequestParam("xs") String[] xs, @RequestParam("ys") String[] ys,HttpServletResponse response) {
@@ -45,6 +46,7 @@ public class AnnotationController {
 		}
 	}
 	
+	//获取标注信息
 	@RequestMapping(value = "/get")
 	@ResponseBody
 	public void getAnnotation(String id, HttpServletResponse response) {
@@ -66,6 +68,7 @@ public class AnnotationController {
 		}
 	}
 	
+	//删除标注数据
 	@RequestMapping(value = "/delete")
 	@ResponseBody
 	public void deleteAnnotation(String id, HttpServletResponse response) {

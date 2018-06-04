@@ -42,7 +42,6 @@ public class AnalyzeService {
 		List<CaseToBug> lists = ctbdao.findByCase(case_take_id);
 		for(CaseToBug ctb : lists) {
 			for(String str: ctb.getBug_id()) {
-//				if(!result.contains(str)) {result.add(str);}
 				result.add(str);
 			}
 		}

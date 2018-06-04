@@ -127,6 +127,7 @@ public class RecommendController {
 		}
 	}
 	
+	//获取标题
 	@RequestMapping(value = "/title")
 	@ResponseBody
 	public void getTitle(String id, HttpServletResponse response) {

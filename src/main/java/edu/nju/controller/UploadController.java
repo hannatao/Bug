@@ -32,7 +32,7 @@ public class UploadController {
 	@ResponseBody
 	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		boolean flag = false;
+		boolean flag = true;
 		if(!useCase.equals("null")) {flag = ctbservice.save(useCase, id, case_take_id, report_id);}
 		flag = flag && saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page);
 		if(flag) {result.put("status", "200");}
