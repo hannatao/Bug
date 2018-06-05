@@ -52,7 +52,7 @@ public class DeleteController {
 		}
 	}
 	
-	@RequestMapping(value = "/one")
+	@RequestMapping(value = "/bug")
 	@ResponseBody
 	public void deleteBug(String id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
