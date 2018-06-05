@@ -34,8 +34,12 @@ public class BugMirror {
 	
 	private String img_url;
 	
+	private boolean flag;
+	
+	private String useCase;
+	
 	@PersistenceConstructor
-	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, Set<String> good, Set<String> bad, String report_id) {
+	public BugMirror(String id, String case_take_id, String bug_category, int severity, int recurrent, String title, String img_url, Set<String> good, Set<String> bad, String report_id, String useCase, boolean flag) {
 		this.id = id;
 		this.case_take_id = case_take_id;
 		this.bug_category = bug_category;
@@ -46,6 +50,8 @@ public class BugMirror {
 		this.bad = bad;
 		this.good = good;
 		this.report_id = report_id;
+		this.useCase = useCase;
+		this.flag = flag;
 	}
 	
 	public String getId() {
@@ -126,5 +132,21 @@ public class BugMirror {
 
 	public void setReport_id(String report_id) {
 		this.report_id = report_id;
+	}
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
+	public String getUseCase() {
+		return useCase;
+	}
+
+	public void setUseCase(String useCase) {
+		this.useCase = useCase;
 	}
 }

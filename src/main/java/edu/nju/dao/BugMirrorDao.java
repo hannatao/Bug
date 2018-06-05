@@ -38,6 +38,12 @@ public class BugMirrorDao {
 		mongoOperations.remove(query,BugMirror.class);
 	}
 	
+	public List<BugMirror> findValid(String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("flag").is(true));
+		return mongoOperations.find(query, BugMirror.class);
+	}
+	
 	public List<BugMirror> findByCase(String case_take_id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("case_take_id").is(case_take_id));

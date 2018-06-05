@@ -33,10 +33,10 @@ public class SaveService {
 	@Autowired
 	HistoryService hisservice;
 	
-	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page) {
+	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String useCase, String case_id) {
 		try {
-			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page));
-			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>(), report_id));
+			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page, case_id));
+			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>(), report_id, useCase, true));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
 				String p = hisservice.parents(parent).get(0);
@@ -55,19 +55,19 @@ public class SaveService {
 		}
 	}
 	
-	public boolean update(String id, String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent,String page) {
-		try {
-			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severity, recurrent, title, report_id, page));
-			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severity, recurrent, title, img_url, new HashSet<String>(), new HashSet<String>(), report_id));
-			if(!page.equals("")) {
-				savePage(id, case_take_id, page);
-			}
-			return true;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+//	public boolean update(String id, String case_take_id, String bug_category, String description, String img_url, int severity, int recurrent, String title, String report_id, String parent,String page, String useCase, String case_id) {
+//		try {
+//			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page, case_id));
+//			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>(), report_id, useCase, true));
+//			if(!page.equals("")) {
+//				savePage(id, case_take_id, page);
+//			}
+//			return true;
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
 	
 	public boolean confirm(String id, String report_id) {
 		try {

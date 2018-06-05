@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,6 +44,23 @@ public class DeleteController {
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(deleteservice.deleteOne(id));
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/one")
+	@ResponseBody
+	public void deleteBug(String id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(deleteservice.deleteBug(id)) {result.put("status", "200");}
+		else {result.put("status", "500");}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (IOException e) {

@@ -40,6 +40,12 @@ public class CTBDao {
 		
 	}
 	
+	public CaseToBug find(String id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		return mongoOperations.find(query, CaseToBug.class).get(0);
+	}
+	
 	public List<String> findById(String id) {
 		Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));

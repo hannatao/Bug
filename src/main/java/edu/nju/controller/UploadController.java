@@ -30,11 +30,11 @@ public class UploadController {
 	//上传新的Bug报告
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	@ResponseBody
-	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
+	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String case_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
 		boolean flag = true;
 		if(!useCase.equals("null")) {flag = ctbservice.save(useCase, id, case_take_id, report_id);}
-		flag = flag && saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page);
+		flag = flag && saveservice.save(id, case_take_id, bug_category, description, img_url, severity, recurrent, title, report_id, parent, page, useCase, case_id);
 		if(flag) {result.put("status", "200");}
 		else {result.put("status", "500");}
 		try {
@@ -49,25 +49,24 @@ public class UploadController {
 	}
 	
 	//对已有报告进行修改
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseBody
-	public void update(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
-		JSONObject result = new JSONObject();
-		if(saveservice.update(id, case_take_id, bug_category, description, img_url, Integer.parseInt(severity), Integer.parseInt(recurrent), title, report_id, parent, page)) {
-			result.put("status", "200");
-		} else {
-			result.put("status", "500");
-		}
-		try {
-			PrintWriter out = response.getWriter();
-			out.print(result);
-			out.flush();
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@RequestMapping(value = "/update", method = RequestMethod.POST)
+//	@ResponseBody
+//	public void update(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, HttpServletResponse response) {
+//		JSONObject result = new JSONObject();
+//		if(saveservice.update(id, case_take_id, bug_category, description, img_url, Integer.parseInt(severity), Integer.parseInt(recurrent), title, report_id, parent, page)) {
+//			result.put("status", "200");
+//		} else {
+//			result.put("status", "500");
+//		}
+//		try {
+//			PrintWriter out = response.getWriter();
+//			out.print(result);
+//			out.flush();
+//			out.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	//👍
 	@RequestMapping(value = "/good")

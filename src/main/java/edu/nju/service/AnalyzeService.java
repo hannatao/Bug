@@ -39,6 +39,15 @@ public class AnalyzeService {
 	
 	public List<String> getValid(String case_take_id) {
 		List<String> result = new ArrayList<String>();
+		List<BugMirror> mirrors = mdao.findValid(case_take_id);
+		for(BugMirror ctb : mirrors) {
+			result.add(ctb.getId());
+		}
+		return result;
+	}
+	
+	public List<String> getValidTwo(String case_take_id) {
+		List<String> result = new ArrayList<String>();
 		List<CaseToBug> lists = ctbdao.findByCase(case_take_id);
 		for(CaseToBug ctb : lists) {
 			for(String str: ctb.getBug_id()) {
