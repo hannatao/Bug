@@ -10,10 +10,13 @@ import edu.nju.dao.BugDao;
 import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
 import edu.nju.dao.BugPageDao;
+import edu.nju.dao.KWDao;
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
 import edu.nju.entities.BugPage;
+import edu.nju.entities.KeyWords;
+import edu.nju.util.StringMatch;
 
 @Service
 public class SaveService {
@@ -33,10 +36,15 @@ public class SaveService {
 	@Autowired
 	HistoryService hisservice;
 	
+	@Autowired
+	KWDao kwdao;
+	
 	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String useCase, String case_id) {
 		try {
+			StringMatch match = new StringMatch();
 			bugdao.save(new Bug(id, case_take_id, Long.toString(System.currentTimeMillis()), bug_category, description, img_url, severityTranse(severity), recurrentTranse(recurrent), title, report_id, page, case_id));
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>(), report_id, useCase, true));
+			kwdao.save(new KeyWords(id, match.Ansj(title), match.Ansj(description)));
 			if(!parent.equals("null")) {
 				historydao.addChild(parent, id);
 				String p = hisservice.parents(parent).get(0);

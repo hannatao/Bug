@@ -3,7 +3,10 @@ package edu.nju.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -57,7 +60,7 @@ public class RecommendController {
 			session.setAttribute("report", report_id);
 			PrintWriter out = response.getWriter();
 			List<BugMirror> mirrors = recservice.getList(case_take_id, report_id);
-			filter(historyservice.getNew(case_take_id, report_id), mirrors, case_take_id);
+			filter(historyservice.getNew(case_take_id, report_id), mirrors);
 			out.print(new JSONArray(mirrors));
 			out.flush();
 			out.close();
@@ -99,26 +102,40 @@ public class RecommendController {
 	@ResponseBody
 	public void recommend(String case_take_id, String type, String content, HttpSession session, HttpServletResponse response) {
 		try {
+			JSONObject result = new JSONObject();
 			PrintWriter out = response.getWriter();
-			List<BugMirror> mirrors = new ArrayList<BugMirror>();
-			if(type.equals("title")) {
-				mirrors.addAll(recservice.recommandByTitle(content, session));
-			} else {
-				if(type.contains("page")) {
-					mirrors.addAll(recservice.recommndByPage(case_take_id, type, content, true, session));
-				} else {
-					mirrors.addAll(recservice.recommend(case_take_id, type, content, true, session));
+			List<BugMirror> mirror1 = new ArrayList<BugMirror>();
+			List<Float> scores = new ArrayList<Float>();
+			Set<BugMirror> mirror2 = new HashSet<BugMirror>();
+			Map<BugMirror, Float> map;
+			if(type.equals("title") || type.equals("description")) {
+				if(type.equals("title")) {map = recservice.recommandByTitle(content, session);}
+				else {map = recservice.recommandByDes(content, session);}
+				if(mirror1 != null) {
+					mirror1.addAll(map.keySet());
+					scores.addAll(map.values());
 				}
+			} else {
+				if(type.contains("page")) {map = recservice.recommndByPage(case_take_id, type, content, true, session);}
+				else {map = recservice.recommend(case_take_id, type, content, true, session);}
 				List<String> reports = new ArrayList<String>();
 				reports.add((String)session.getAttribute("report"));
-				for(int i = 1; i <= mirrors.size(); i ++) {
-					String temp = recservice.getReport(mirrors.get(i - 1).getId());
+				for(int i = 1; i <= map.size(); i ++) {
+					String temp = recservice.getReport(mirror1.get(i - 1).getId());
 					if(!reports.contains(temp)) {reports.add(temp);}
 				}
-				filter(ubservice.UserBased(reports.toArray(new String[reports.size()])), mirrors, case_take_id);
+				if(mirror1 != null) {
+					mirror1.addAll(map.keySet());
+					scores.addAll(map.values());
+				}
+				mirror2.addAll(ubservice.UserBased(reports.toArray(new String[reports.size()])));
 			}
-			filter(historyservice.getNew(case_take_id, (String)session.getAttribute("report")), mirrors, case_take_id);
-			out.print(new JSONArray(mirrors));
+			mirror2.addAll(historyservice.getNew(case_take_id, (String)session.getAttribute("report")));
+			filter(mirror2, mirror1);
+			result.put("same", new JSONArray(mirror1));
+			result.put("scores", new JSONArray(scores));
+			result.put("new", new JSONArray(mirror2));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -142,15 +159,21 @@ public class RecommendController {
 		}
 	}
 	
-	public static void filter(List<BugMirror> a, List<BugMirror> b, String case_take_id) {
+	public static void filter(List<BugMirror> a, List<BugMirror> b) {
 		if(a == null) {return;}
 		for(BugMirror a1: a) {
 			boolean flag = true;
 			for(BugMirror b1 : b) {
 				if(a1.getId().equals(b1.getId())) {flag = false;}
-//				if(!a1.getCase_take_id().equals(case_take_id)) {flag = false;}
 			}
 			if(flag) {b.add(a1);}
+		}
+	}
+	
+	public static void filter(Set<BugMirror> a, List<BugMirror> b) {
+		if(a == null || b == null) {return;}
+		for(BugMirror mirror : b) {
+			if(a.contains(mirror)) {a.remove(mirror);}
 		}
 	}
 }
