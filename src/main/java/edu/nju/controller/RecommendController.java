@@ -56,6 +56,12 @@ public class RecommendController {
 			if(session.getAttribute("path") != null) {
 				session.removeAttribute("path");
 			}
+			if(session.getAttribute("title") != null) {
+				session.removeAttribute("title");
+			}
+			if(session.getAttribute("des") != null) {
+				session.removeAttribute("des");
+			}
 			session.setAttribute("case", case_take_id);
 			session.setAttribute("report", report_id);
 			PrintWriter out = response.getWriter();
@@ -120,13 +126,13 @@ public class RecommendController {
 				else {map = recservice.recommend(case_take_id, type, content, true, session);}
 				List<String> reports = new ArrayList<String>();
 				reports.add((String)session.getAttribute("report"));
-				for(int i = 1; i <= map.size(); i ++) {
-					String temp = recservice.getReport(mirror1.get(i - 1).getId());
-					if(!reports.contains(temp)) {reports.add(temp);}
-				}
 				if(mirror1 != null) {
 					mirror1.addAll(map.keySet());
 					scores.addAll(map.values());
+				}
+				for(int i = 1; i <= mirror1.size(); i ++) {
+					String temp = recservice.getReport(mirror1.get(i - 1).getId());
+					if(!reports.contains(temp)) {reports.add(temp);}
 				}
 				mirror2.addAll(ubservice.UserBased(reports.toArray(new String[reports.size()])));
 			}

@@ -10,6 +10,7 @@ import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
 import edu.nju.dao.BugPageDao;
 import edu.nju.dao.CTBDao;
+import edu.nju.dao.KWDao;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
 import edu.nju.entities.CaseToBug;
@@ -34,6 +35,9 @@ public class DeleteService {
 	@Autowired
 	CTBDao ctbdao;
 	
+	@Autowired
+	KWDao kwdao;
+	
 	public boolean deleteOne(String id) {
 		try {
 			String useCase = mirrordao.findById(id).getUseCase();
@@ -47,6 +51,7 @@ public class DeleteService {
 			mirrordao.remove(id);
 			bugdao.remove(id);
 			pagedao.remove(id);
+			kwdao.remove(id);
 			if(!useCase.equals("null")) {
 				CaseToBug ctb = ctbdao.find(useCase);
 				ctb.getBug_id().remove(id);

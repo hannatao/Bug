@@ -94,7 +94,9 @@ public class RecommendService {
 		session.setAttribute("rec", results);
 		if(flag) {
 			Algorithm algorithm = new Algorithm_1();
-			if(results != null) {algorithm.sort(results);}
+			if(results != null) {results = algorithm.sort(results);}
+			if(session.getAttribute("title") != null) {return recommandByTitle((String)session.getAttribute("title"), session);}
+			if(session.getAttribute("des") != null) {return recommandByDes((String)session.getAttribute("des"), session);}
 		}
 		
 		Map<String, String> map = (Map<String, String>)session.getAttribute("path");
@@ -131,7 +133,9 @@ public class RecommendService {
 		
 		if(flag) {
 			Algorithm algorithm = new Algorithm_1();
-			if(mirrors != null) {algorithm.sort(mirrors);}
+			if(mirrors != null) {mirrors = algorithm.sort(mirrors);}
+			if(session.getAttribute("title") != null) {return recommandByTitle((String)session.getAttribute("title"), session);}
+			if(session.getAttribute("des") != null) {return recommandByDes((String)session.getAttribute("des"), session);}
 		}
 		
 		Map<String, String> map = (Map<String, String>)session.getAttribute("path");
@@ -298,14 +302,14 @@ public class RecommendService {
 			String id = mirror.getId();
 			float score = 0;
 			if(type) {
-				score += match.score(match.Ansj(content), match.Ansj(titleMap.get(id))) * 0.3;
+				score += match.score(match.Ansj(content), match.Ansj(titleMap.get(id))) * 30;
 				if(session.getAttribute("des") != null) {
-					score += match.score(match.Ansj((String)session.getAttribute("des")), match.Ansj(desMap.get(id))) * 0.4;
+					score += match.score(match.Ansj((String)session.getAttribute("des")), match.Ansj(desMap.get(id))) * 40;
 				}
 			} else {
-				score += match.score(match.Ansj(content), match.Ansj(desMap.get(id))) * 0.4;
+				score += match.score(match.Ansj(content), match.Ansj(desMap.get(id))) * 40;
 				if(session.getAttribute("title") != null) {
-					score += match.score(match.Ansj((String)session.getAttribute("title")), match.Ansj(titleMap.get(id))) * 0.3;
+					score += match.score(match.Ansj((String)session.getAttribute("title")), match.Ansj(titleMap.get(id))) * 30;
 				}
 			}
 			tmap.put(mirror, score);

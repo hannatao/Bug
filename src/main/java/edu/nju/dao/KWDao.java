@@ -23,4 +23,10 @@ public class KWDao {
 		query.addCriteria(Criteria.where("_id").is(id));
 		return mongoOperations.find(query, KeyWords.class).get(0);
 	}
+	
+	public void remove(String id){
+	    Query query = new Query();
+	    query.addCriteria(Criteria.where("_id").is(id));
+	    mongoOperations.remove(query, KeyWords.class);
+	}
 }
