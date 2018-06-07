@@ -5,7 +5,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class BugScore {
+public class BugScore implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2993945374555651123L;
+
 	@Id
     private String id;
 	

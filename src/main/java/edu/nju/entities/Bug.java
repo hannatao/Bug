@@ -6,7 +6,12 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Bug {
+public class Bug implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8980368107739914394L;
+
 	@Id
     private String id;
 

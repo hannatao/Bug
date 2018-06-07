@@ -7,7 +7,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class BugHistory {
+public class BugHistory implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8852808978961197553L;
+
 	@Id
     private String id;
 	

@@ -95,4 +95,25 @@ public class HistoryController {
 			e.printStackTrace();
 		}
 	}
+	
+	@RequestMapping(value = "/getSingle")
+	@ResponseBody
+	public void getSingle(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			List<String> list = new ArrayList<String>();
+			for(String id : hisservice.getRoots(case_take_id)) {
+				if(hisservice.getHistory(id).getChildren().size() == 0) {list.add(id);}
+			}
+			result.put("Count", list.size());
+			result.put("TreeRoot", new JSONArray(list));
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

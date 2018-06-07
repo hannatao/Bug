@@ -5,8 +5,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class ImageAnnotation {
-	
+public class ImageAnnotation implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4960970930384537028L;
+
 	@Id
     private String id;
 	

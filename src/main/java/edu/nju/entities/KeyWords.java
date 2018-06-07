@@ -5,8 +5,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class KeyWords {
-	
+public class KeyWords implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3325877949872439231L;
+
 	@Id
     private String id;
 	

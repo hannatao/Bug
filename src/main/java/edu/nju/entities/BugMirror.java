@@ -8,7 +8,12 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class BugMirror {
+public class BugMirror implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7484726588592610736L;
+
 	@Id
     private String id;
 

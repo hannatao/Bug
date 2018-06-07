@@ -7,8 +7,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class CaseToBug {
-	
+public class CaseToBug implements java.io.Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1969002363605622255L;
+
 	@Id
 	private String id;
 	

@@ -83,13 +83,13 @@ public class DeleteService {
 		}
 	}
 	
-	public boolean deleteBug(String id, String useCase) {
+	public boolean deleteBug(String id) {
 		try {
 			BugMirror mirror = mirrordao.findById(id);
 			mirror.setFlag(false);
 			mirrordao.save(mirror);
-			if(!useCase.equals("null")) {
-				CaseToBug ctb = ctbdao.find(useCase);
+			if(!mirror.getUseCase().equals("null")) {
+				CaseToBug ctb = ctbdao.find(mirror.getUseCase());
 				ctb.getBug_id().remove(id);
 				ctbdao.save(ctb);
 			}
