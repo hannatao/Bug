@@ -63,6 +63,7 @@ public class DeleteService {
 			}
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -79,6 +80,7 @@ public class DeleteService {
 			bsdao.remove(ids);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -87,14 +89,15 @@ public class DeleteService {
 		try {
 			BugMirror mirror = mirrordao.findById(id);
 			mirror.setFlag(false);
-			mirrordao.save(mirror);
 			if(!mirror.getUseCase().equals("null")) {
 				CaseToBug ctb = ctbdao.find(mirror.getUseCase());
 				ctb.getBug_id().remove(id);
 				ctbdao.save(ctb);
 			}
+			mirrordao.save(mirror);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

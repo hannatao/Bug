@@ -3,7 +3,9 @@ package edu.nju.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -46,7 +48,11 @@ public class HistoryController {
 	public void getPath(String id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONArray(hisservice.getDepth(id)));
+			JSONObject result = new JSONObject();
+			List<List<String>> lists = hisservice.getDepth(id);
+			result.put("path", new JSONArray(lists));
+			result.put("invalid", new JSONArray(hisservice.filter(lists)));
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (IOException e) {
@@ -102,9 +108,13 @@ public class HistoryController {
 		try {
 			PrintWriter out = response.getWriter();
 			JSONObject result = new JSONObject();
-			List<String> list = new ArrayList<String>();
+			Set<String> list = new HashSet<String>();
 			for(String id : hisservice.getRoots(case_take_id)) {
 				if(hisservice.getHistory(id).getChildren().size() == 0) {list.add(id);}
+			}
+			List<String> invalid = hisservice.getInvalid(list);
+			for(String id: invalid) {
+				if(list.contains(id)) {list.remove(id);}
 			}
 			result.put("Count", list.size());
 			result.put("TreeRoot", new JSONArray(list));

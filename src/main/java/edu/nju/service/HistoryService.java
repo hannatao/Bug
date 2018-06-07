@@ -1,7 +1,9 @@
 package edu.nju.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,28 @@ public class HistoryService {
 		return mirrordao.findByIds(filter, report_id);
 	}
 	
+	public List<String> getRoots(String case_take_id) {
+		return historydao.findRoots(aservice.getValid(case_take_id));
+	}
+	
+	public List<String> getInvalid(Set<String> ids) {
+		List<String> result = new ArrayList<String>();
+		for(String id: ids) {
+			if(!mirrordao.findById(id).isFlag()) {result.add(id);}
+		}
+		return result;
+	}
+	
+	public List<String> filter(List<List<String>> lists) {
+		Set<String> set = new HashSet<String>();
+		for(List<String> list : lists) {
+			for(String id: list) {
+				set.add(id);
+			}
+		}
+		return getInvalid(set);
+	}
+	
 	public List<List<String>> getDepth(String id) {
 		BugHistory root = historydao.findByid(id);
 		List<List<String>> result = new ArrayList<List<String>>();
@@ -70,11 +94,7 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<String> getRoots(String case_take_id) {
-		return historydao.findRoots(aservice.getValid(case_take_id));
-	}
-	
-	public void dfs(BugHistory root, List<List<String>> result, List<String> list) {
+	private void dfs(BugHistory root, List<List<String>> result, List<String> list) {
 		List<String> children = root.getChildren();
 		if(children.size() != 0) {
 			for(String child : children) {
