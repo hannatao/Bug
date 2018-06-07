@@ -324,6 +324,7 @@ public class RecommendService {
 		
 		for(int i = 0; i < tlist.size() && i < 6; i ++) {
 			float score = (float) (tlist.get(i).getValue());
+			if(score <= 1) {continue;}
 			score += size * 5;
 			result.put(tlist.get(i).getKey(), score);
 		}

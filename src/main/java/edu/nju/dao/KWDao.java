@@ -1,5 +1,7 @@
 package edu.nju.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -27,6 +29,12 @@ public class KWDao {
 	public void remove(String id){
 	    Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
+	    mongoOperations.remove(query, KeyWords.class);
+	}
+	
+	public void remove(List<String> ids) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("_id").in(ids));
 	    mongoOperations.remove(query, KeyWords.class);
 	}
 }

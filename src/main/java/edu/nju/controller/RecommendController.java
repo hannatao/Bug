@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -157,6 +158,30 @@ public class RecommendController {
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(recservice.getTitle(id));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/fork")
+	@ResponseBody
+	public void fork(String page1, String page2, String page3, String bug_category, String severity, String recurrent, HttpSession session, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			Map<String, String> map = new LinkedHashMap<String, String>();
+			if(!page1.equals("null")) {map.put("page1", page1);}
+			if(!page2.equals("null")) {map.put("page2", page2);}
+			if(!page3.equals("null")) {map.put("page3", page1);}
+			map.put("bug_category", bug_category);
+			map.put("severity", severity);
+			map.put("recurrent", recurrent);
+			session.setAttribute("path", map);
+			result.put("status", 200);
+			out.print(result);
 			out.flush();
 			out.close();
 		} catch (Exception e) {

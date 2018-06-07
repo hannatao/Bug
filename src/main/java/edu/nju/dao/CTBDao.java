@@ -75,7 +75,13 @@ public class CTBDao {
 	    mongoOperations.save(result);
 	}
 	
-	public void removeAll(String useCase) {
+	public void removeAll(String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
+		mongoOperations.remove(query, CaseToBug.class);
+	}
+	
+	public void remove(String useCase) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(useCase));
 		mongoOperations.remove(query, CaseToBug.class);

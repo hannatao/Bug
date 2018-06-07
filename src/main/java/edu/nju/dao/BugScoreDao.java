@@ -31,4 +31,10 @@ public class BugScoreDao {
 	    query.addCriteria(Criteria.where("_id").in(list));
 	    return mongoOperations.find(query, BugScore.class);
 	}
+	
+	public void remove(List<String> ids) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("_id").in(ids));
+	    mongoOperations.remove(query, BugScore.class);
+	}
 }

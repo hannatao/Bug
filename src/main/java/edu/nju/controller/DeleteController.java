@@ -54,9 +54,9 @@ public class DeleteController {
 	
 	@RequestMapping(value = "/bug")
 	@ResponseBody
-	public void deleteBug(String id, HttpServletResponse response) {
+	public void deleteBug(String id, String useCase, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		if(deleteservice.deleteBug(id)) {result.put("status", "200");}
+		if(deleteservice.deleteBug(id, useCase)) {result.put("status", "200");}
 		else {result.put("status", "500");}
 		try {
 			PrintWriter out = response.getWriter();
