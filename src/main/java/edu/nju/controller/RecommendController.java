@@ -166,6 +166,7 @@ public class RecommendController {
 		}
 	}
 	
+	//fork时，传回所有的选择参数
 	@RequestMapping(value = "/fork")
 	@ResponseBody
 	public void fork(String page1, String page2, String page3, String bug_category, String severity, String recurrent, HttpSession session, HttpServletResponse response) {

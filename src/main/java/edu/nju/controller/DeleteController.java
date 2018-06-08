@@ -37,7 +37,7 @@ public class DeleteController {
 		}
 	}
 	
-	//删除单条bug
+	//数据库删除单条bug
 	@RequestMapping(value = "/one")
 	@ResponseBody
 	public void deleteOne(String id, HttpServletResponse response) {
@@ -52,6 +52,7 @@ public class DeleteController {
 		}
 	}
 	
+	//指定bug无效
 	@RequestMapping(value = "/bug")
 	@ResponseBody
 	public void deleteBug(String id, HttpServletResponse response) {

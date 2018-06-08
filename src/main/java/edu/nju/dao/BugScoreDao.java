@@ -23,7 +23,9 @@ public class BugScoreDao {
 	public BugScore findById(String id) {
 		Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
-	    return mongoOperations.find(query, BugScore.class).get(0);
+	    List<BugScore> list = mongoOperations.find(query, BugScore.class);
+	    if(list != null && list.size() != 0) {return list.get(0);}
+	    return null;
 	}
 	
 	public List<BugScore> findByIds(List<String> list) {

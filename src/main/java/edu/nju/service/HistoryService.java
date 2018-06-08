@@ -75,14 +75,62 @@ public class HistoryService {
 		return result;
 	}
 	
-	public List<String> filter(List<List<String>> lists) {
+	public List<String> getInvalid(List<String> ids) {
+		List<String> result = new ArrayList<String>();
+		for(String id: ids) {
+			if(!mirrordao.findById(id).isFlag()) {result.add(id);}
+		}
+		return result;
+	}
+	
+	public Set<String> filter(List<List<String>> lists) {
 		Set<String> set = new HashSet<String>();
 		for(List<String> list : lists) {
 			for(String id: list) {
 				set.add(id);
 			}
 		}
-		return getInvalid(set);
+		return set;
+	}
+	
+	public List<String> getDetail(String id) {
+		List<String> result = new ArrayList<String>();
+		List<List<String>> paths = getDepth(id);
+		List<Set<String>> widths = new ArrayList<Set<String>>();
+		Set<String> ids = new HashSet<String>();
+		int max_height = 0;
+		int max_width = 0;
+		int count = 0;
+		String flag = "true";
+		for(List<String> path: paths) {
+			max_height = Math.max(max_height, path.size());
+			for(int i = 0; i < path.size(); i ++) {
+				String temp = path.get(i);
+				ids.add(temp);
+				if(widths.size() <= i) {
+					Set<String> set = new HashSet<String>();
+					set.add(temp);
+					widths.add(set);
+				}
+				else {widths.get(i).add(temp);}
+			}
+		}
+		for(Set<String> width: widths) {
+			max_width = Math.max(max_width, width.size());
+		}
+		for(String str: ids) {
+			if(aservice.getGrade(str) == -1) {
+				flag = "false";
+				break;
+			}
+		}
+		count = ids.size();
+		result.add(id);
+		result.add(Integer.toString(max_width));
+		result.add(Integer.toString(max_height));
+		result.add(Integer.toString(count));
+		result.add(flag);
+		return result;
 	}
 	
 	public List<List<String>> getDepth(String id) {

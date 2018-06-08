@@ -67,7 +67,9 @@ public class AnalyzeService {
 	}
 	
 	public int getGrade(String id) {
-		return bsdao.findById(id).getGrade();
+		BugScore bs = bsdao.findById(id);
+		if(bs != null) {return bs.getGrade();}
+		return -1;
 	}
 	
 	public boolean saveGrade(String id, int grade) {
@@ -190,5 +192,17 @@ public class AnalyzeService {
 			else {bugs.add(entry.getKey());}
 		}
 		return bugs;
+	}
+	
+	public List<List<String>> getScores(List<String> ids) {
+		List<List<String>> result = new ArrayList<List<String>>();
+		List<BugScore> list = bsdao.findByIds(ids);
+		for(BugScore bs: list) {
+			List<String> temp = new ArrayList<String>();
+			temp.add(bs.getId());
+			temp.add(Integer.toString(bs.getGrade()));
+			result.add(temp);
+		}
+		return result;
 	}
 }
