@@ -77,12 +77,12 @@ public class HistoryController {
 				if(hisservice.getHistory(id).getChildren().size() > 0) {all.add(id);}
 			}
 			
-			List<String> ids = all.subList(Integer.parseInt(start), Math.max(all.size(), Integer.parseInt(start) + Integer.parseInt(count)));
+			List<String> ids = all.subList(Integer.parseInt(start), Math.min(all.size(), Integer.parseInt(start) + Integer.parseInt(count)));
 			List<List<String>> list = new ArrayList<List<String>>();
 			for(String id: ids) {
 				list.add(hisservice.getDetail(id));
 			}
-			result.put("Count", list.size());
+			result.put("Count", all.size());
 			result.put("TreeRoot", new JSONArray(list));
 			out.print(result);
 			out.flush();
@@ -105,7 +105,7 @@ public class HistoryController {
 				if(hisservice.getHistory(id).getChildren().size() == 0) {all.add(id);}
 			}
 			
-			List<String> ids = all.subList(Integer.parseInt(start), Math.max(all.size(), Integer.parseInt(start) + Integer.parseInt(count)));
+			List<String> ids = all.subList(Integer.parseInt(start), Math.min(all.size(), Integer.parseInt(start) + Integer.parseInt(count)));
 			List<String> invalid = hisservice.getInvalid(ids);
 			for(String id: invalid) {
 				if(ids.contains(id)) {ids.remove(id);}
@@ -120,7 +120,7 @@ public class HistoryController {
 				else {temp.add("false");}
 				list.add(temp);
 			}
-			result.put("Count", list.size());
+			result.put("Count", all.size());
 			result.put("TreeRoot", new JSONArray(list));
 			out.print(result);
 			out.flush();
