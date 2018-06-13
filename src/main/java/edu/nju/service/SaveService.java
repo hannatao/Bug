@@ -11,6 +11,7 @@ import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
 import edu.nju.dao.BugPageDao;
 import edu.nju.dao.KWDao;
+import edu.nju.dao.ThumsUpDao;
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
@@ -38,6 +39,9 @@ public class SaveService {
 	
 	@Autowired
 	KWDao kwdao;
+	
+	@Autowired
+	ThumsUpDao tdao;
 	
 	public boolean save(String id, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String useCase, String case_id) {
 		try {
@@ -81,6 +85,7 @@ public class SaveService {
 		try {
 			if(mirrordao.haveJudged(id, report_id)) {
 				mirrordao.good(id, report_id);
+				tdao.saveGood(id, report_id);
 				return true;
 			}
 			return false;
@@ -93,6 +98,7 @@ public class SaveService {
 		try {
 			if(mirrordao.haveJudged(id, report_id)) {
 				mirrordao.bad(id, report_id);
+				tdao.saveDiss(id, report_id);
 				return true;
 			}
 			return false;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.service.AnalyzeService;
+import edu.nju.service.ReportService;
 
 @Controller
 @RequestMapping(value = "/analyze")
@@ -23,6 +24,9 @@ public class AnalyzeController {
 	
 	@Autowired
 	AnalyzeService aservice;
+	
+	@Autowired
+	ReportService rservice;
 	
 	//根据用例获取所有有效bug
 	@RequestMapping(value = "/valid")
@@ -171,6 +175,26 @@ public class AnalyzeController {
 			List<String> list = aservice.getDiff(case_take_id);
 			result.put("Count", list.size());
 			result.put("Detail", new JSONArray(list));
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/report")
+	@ResponseBody
+	public void getReport(String report_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			result.put("Valid Thumsup", rservice.getValidThums(report_id) + "/" + rservice.getAllThums(report_id).size());
+			result.put("Valid Diss", rservice.getValidDiss(report_id) + "/" + rservice.getAllDiss(report_id).size());
+			result.put("Path Cover", rservice.getUserPath(report_id));
+			result.put("Valid Bug", rservice.getValid(report_id) + "/" + rservice.getUserBugs(report_id).size());
+			result.put("Time Gap", rservice.getTimeGap(report_id));
 			out.print(result);
 			out.flush();
 			out.close();

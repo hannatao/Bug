@@ -164,7 +164,6 @@ public class AnalyzeService {
 		List<String> bugs = getValid(case_take_id);
 		for(String id : bugs) {
 			Bug bug = bdao.findByid(id);
-			result.put(bug.getBug_category(), result.getOrDefault(bug.getBug_category(), 0) + 1);
 			result.put(bug.getBug_page(), result.getOrDefault(bug.getBug_page(), 0) + 1);
 		}
 		return result;
@@ -205,4 +204,6 @@ public class AnalyzeService {
 		}
 		return result;
 	}
+	
+	
 }
