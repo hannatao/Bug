@@ -1,6 +1,7 @@
 package edu.nju.controller;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -184,6 +185,7 @@ public class AnalyzeController {
 		}
 	}
 	
+	//获取用户的有效信息
 	@RequestMapping(value = "/report")
 	@ResponseBody
 	public void getReport(String report_id, HttpServletResponse response) {
@@ -202,5 +204,35 @@ public class AnalyzeController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//获取路径信息
+	@RequestMapping(value = "/path")
+	@ResponseBody
+	public void getUserPath(String case_take_id, String report_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			JSONObject result = new JSONObject();
+			result.put("all", filter(aservice.getBugDetail(case_take_id)));
+			result.put("self", filter(rservice.getUserPath(report_id)));
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private Map<String, Integer> filter(Map<String, Integer> maps) {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		for(Map.Entry<String, Integer> entry : maps.entrySet()) {
+			String[] pages = entry.getKey().split("-");
+			if(pages.length > 0) {
+				String key = pages[pages.length - 1];
+				result.put(key, result.getOrDefault(key, 0) + entry.getValue());
+			}
+		}
+		return result;
 	}
 }

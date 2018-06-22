@@ -205,5 +205,4 @@ public class AnalyzeService {
 		return result;
 	}
 	
-	
 }
