@@ -40,7 +40,7 @@ public class ReportService {
 	ThumsUpDao tdao;
 	
 	public List<String> getUserBugs(String report_id) {
-		return bdao.findByReport(report_id);
+		return mdao.findByReport(report_id);
 	}
 	
 	public Map<String, Integer> getUserPath(String report_id) {
