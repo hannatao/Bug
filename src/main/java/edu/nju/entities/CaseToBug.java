@@ -14,13 +14,13 @@ public class CaseToBug implements java.io.Serializable{
 	private static final long serialVersionUID = 1969002363605622255L;
 
 	@Id
-	private String id;
+	private String id;  //用例id
 	
 	private String case_take_id;
 	
 	private String report_id;
 	
-	private List<String> bug_id;
+	private List<String> bug_id;  //该用例下的所有bug
 	
 	@PersistenceConstructor
 	public CaseToBug(String id, List<String> bug_id, String case_take_id, String report_id) {

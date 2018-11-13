@@ -131,11 +131,11 @@ public class RecommendController {
 					mirror1.addAll(map.keySet());
 					scores.addAll(map.values());
 				}
-				for(int i = 1; i <= mirror1.size(); i ++) {
-					String temp = recservice.getReport(mirror1.get(i - 1).getId());
-					if(!reports.contains(temp)) {reports.add(temp);}
-				}
-				mirror2.addAll(ubservice.UserBased(reports.toArray(new String[reports.size()])));
+//				for(int i = 1; i <= mirror1.size(); i ++) {
+//					String temp = recservice.getReport(mirror1.get(i - 1).getId());
+//					if(!reports.contains(temp)) {reports.add(temp);}
+//				}
+//				mirror2.addAll(ubservice.UserBased(reports.toArray(new String[reports.size()])));
 			}
 			mirror2.addAll(historyservice.getNew(case_take_id, (String)session.getAttribute("report")));
 			filter(mirror2, mirror1);
@@ -176,7 +176,7 @@ public class RecommendController {
 			Map<String, String> map = new LinkedHashMap<String, String>();
 			if(!page1.equals("null")) {map.put("page1", page1);}
 			if(!page2.equals("null")) {map.put("page2", page2);}
-			if(!page3.equals("null")) {map.put("page3", page1);}
+			if(!page3.equals("null")) {map.put("page3", page3);}
 			map.put("bug_category", bug_category);
 			map.put("severity", severity);
 			map.put("recurrent", recurrent);

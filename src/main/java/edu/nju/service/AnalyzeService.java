@@ -37,6 +37,10 @@ public class AnalyzeService {
 	@Autowired
 	BugDao bdao;
 	
+	@Autowired
+	HistoryService hservice;
+	
+	//获取所有bug
 	public List<String> getValid(String case_take_id) {
 		List<String> result = new ArrayList<String>();
 		List<BugMirror> mirrors = mdao.findValid(case_take_id);
@@ -46,6 +50,7 @@ public class AnalyzeService {
 		return result;
 	}
 	
+	//获取所有有测试用例的bug
 	public List<String> getValidTwo(String case_take_id) {
 		List<String> result = new ArrayList<String>();
 		List<CaseToBug> lists = ctbdao.findByCase(case_take_id);
@@ -120,24 +125,45 @@ public class AnalyzeService {
 	}
 	
 	public Map<String, Integer> getScores(String case_take_id) {
-		Map<String, Integer> result = new HashMap<String, Integer>();
-		Map<String, Integer> grades = new HashMap<String, Integer>();
+		Map<String, Integer> result = new HashMap<String, Integer>(); //用户得分
+		Map<String, Integer> grades = new HashMap<String, Integer>(); //专家评价分
+		Map<String, Integer> scores = new HashMap<String, Integer>(); //计算bug得分
 		List<String> bugs = getValid(case_take_id);
 		for(String bug: bugs) {
-			grades.put(bug, bsdao.findById(bug).getGrade());
+			BugScore temp = bsdao.findById(bug);
+			if(temp != null) {grades.put(bug, temp.getGrade());}
+			else {grades.put(bug, 0);}
+		}
+//		for(String bug: bugs) {
+//			BugMirror mirror = mdao.findById(bug);
+//			int grade = grades.get(bug);
+//			if(grade == 0) {continue;}
+//			if(grade == 1) {ThumsUp(5, result, mirror);}
+//			else if(grade == 2) {ThumsUp(3, result, mirror);}
+//			else {ThumsUp(-3, result, mirror);}
+//			result.put(mirror.getReport_id(), result.getOrDefault(mirror.getReport_id(), 0) + mark(bug, grades, mirror));
+//		}
+		countScore(case_take_id, scores, grades);
+		for(String bug: bugs) {
+			BugMirror mirror = mdao.findById(bug);
+			if(mirror == null) { continue; }
+			int grade = grades.getOrDefault(bug, 0);
+			if(grade >= 8) { ThumsUp(1, result, mirror); }
+			if(grade <= 2) { ThumsUp(-1, result, mirror); }
+		}
+		for(Map.Entry<String, Integer> entry : result.entrySet()) {
+			if(entry.getValue() > 10) { result.put(entry.getKey(), 10); }
+			if(entry.getValue() < 0) { result.put(entry.getKey(), 0); }
 		}
 		for(String bug: bugs) {
 			BugMirror mirror = mdao.findById(bug);
-			int grade = grades.get(bug);
-			if(grade == 0) {continue;}
-			if(grade == 1) {ThumsUp(5, result, mirror);}
-			else if(grade == 2) {ThumsUp(3, result, mirror);}
-			else {ThumsUp(-3, result, mirror);}
-			result.put(mirror.getReport_id(), result.getOrDefault(mirror.getReport_id(), 0) + mark(bug, grades, mirror));
+			if(mirror == null) { continue; }
+			result.put(mirror.getReport_id(), result.getOrDefault(mirror.getReport_id(), 0) + scores.getOrDefault(bug, 0));
 		}
 		return result;
 	}
 	
+	//计算点赞得分
 	private void ThumsUp(int grade, Map<String, Integer> result, BugMirror mirror) {
 		for(String report : mirror.getGood()) {
 			result.put(report, result.getOrDefault(report, 0) + grade);
@@ -193,6 +219,7 @@ public class AnalyzeService {
 		return bugs;
 	}
 	
+	//评价页面获取评分
 	public List<List<String>> getScores(List<String> ids) {
 		List<List<String>> result = new ArrayList<List<String>>();
 		List<BugScore> list = bsdao.findByIds(ids);
@@ -205,4 +232,19 @@ public class AnalyzeService {
 		return result;
 	}
 	
+	//根据树状结构计算分数
+	public void countScore(String case_take_id, Map<String, Integer> result, Map<String, Integer> grades) {
+		List<String> roots = hservice.getRoots(case_take_id);
+		for(String root : roots) {
+			List<List<String>> lists = hservice.getDepth(root);
+			for(List<String> path : lists) {
+				int max = 0;
+				for(String id : path) {
+					int grade = grades.getOrDefault(id, 0);
+					result.put(id, Math.max(grade - max, 0));
+					max = Math.max(max, grade);
+				}
+			}
+		}
+	}
 }

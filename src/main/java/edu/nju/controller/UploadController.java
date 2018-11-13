@@ -89,6 +89,26 @@ public class UploadController {
 		}
 	}
 	
+	//取消点赞
+	@RequestMapping(value = "/cancelGood")
+	@ResponseBody
+	public void cancelGood(String id, String report_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.cancelGood(id, report_id)) {
+			result.put("status", "200");
+		} else {
+			result.put("status", "500");
+		}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	//差评
 	@RequestMapping(value = "/bad")
 	@ResponseBody
@@ -105,7 +125,26 @@ public class UploadController {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//取消差评
+	@RequestMapping(value = "/cancelBad")
+	@ResponseBody
+	public void cancelBad(String id, String report_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.cancelDiss(id, report_id)) {
+			result.put("status", "200");
+		} else {
+			result.put("status", "500");
+		}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

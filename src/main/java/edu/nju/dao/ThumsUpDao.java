@@ -45,6 +45,19 @@ public class ThumsUpDao {
 		}
 	}
 	
+	public void cancelGood(String id, String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(report_id));
+		List<ThumsUp> list = mongoOperations.find(query, ThumsUp.class);
+		if(list != null && list.size() != 0) {
+			Update update = new Update();
+			Set<String> good = list.get(0).getThums();
+			if(good.contains(id)) { good.remove(id); }
+			update.set("thums", good);
+			mongoOperations.updateFirst(query, update, ThumsUp.class);
+		}
+	}
+	
 	public void saveDiss(String id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(report_id));
@@ -58,6 +71,19 @@ public class ThumsUpDao {
 			Update update = new Update();
 			Set<String> bad = list.get(0).getDiss();
 			bad.add(id);
+			update.set("diss", bad);
+			mongoOperations.updateFirst(query, update, ThumsUp.class);
+		}
+	}
+	
+	public void cancelDiss(String id, String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(report_id));
+		List<ThumsUp> list = mongoOperations.find(query, ThumsUp.class);
+		if(list != null && list.size() != 0) {
+			Update update = new Update();
+			Set<String> bad = list.get(0).getDiss();
+			if(bad.contains(id)) { bad.remove(id); }
 			update.set("diss", bad);
 			mongoOperations.updateFirst(query, update, ThumsUp.class);
 		}

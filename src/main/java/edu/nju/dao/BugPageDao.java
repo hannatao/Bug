@@ -1,5 +1,6 @@
 package edu.nju.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,13 @@ public class BugPageDao {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		return mongoOperations.find(query,BugPage.class).get(0);
+	}
+	
+	public List<BugPage> findByIds(List<String> ids) {
+		if(ids == null || ids.size() == 0) {return new ArrayList<BugPage>();}
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").in(ids));
+		return mongoOperations.find(query, BugPage.class);
 	}
 	
 	public List<BugPage> findByPage1(String case_take_id, String page1) {

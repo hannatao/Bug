@@ -38,6 +38,9 @@ public class SaveService {
 	HistoryService hisservice;
 	
 	@Autowired
+	DotService dotservice;
+	
+	@Autowired
 	KWDao kwdao;
 	
 	@Autowired
@@ -50,9 +53,11 @@ public class SaveService {
 			mirrordao.save(new BugMirror(id, case_take_id, bug_category, severityTranse(severity), recurrentTranse(recurrent), title, img_url, new HashSet<String>(), new HashSet<String>(), report_id, useCase, true));
 			kwdao.save(new KeyWords(id, match.Ansj(title), match.Ansj(description)));
 			if(!parent.equals("null")) {
-				historydao.addChild(parent, id);
-				String p = hisservice.parents(parent).get(0);
-				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), p));
+				String[] sp = parent.split("-");
+				dotservice.saveType1(id, sp[1]);
+				historydao.addChild(sp[0], id);
+				String p = hisservice.parents(sp[0]).get(0);
+				historydao.save(new BugHistory(id, sp[0], new ArrayList<String>(), p));
 			} else {
 				historydao.save(new BugHistory(id, parent, new ArrayList<String>(), id));
 			}
@@ -94,6 +99,16 @@ public class SaveService {
 		}
 	}
 	
+	public boolean cancelGood(String id, String report_id) {
+		try {
+			mirrordao.cancelGood(id, report_id);
+			tdao.cancelGood(id, report_id);
+			return true;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
 	public boolean diss(String id, String report_id) {
 		try {
 			if(mirrordao.haveJudged(id, report_id)) {
@@ -102,6 +117,16 @@ public class SaveService {
 				return true;
 			}
 			return false;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean cancelDiss(String id, String report_id) {
+		try {
+			mirrordao.canelBad(id, report_id);
+			tdao.cancelDiss(id, report_id);
+			return true;
 		} catch(Exception e) {
 			return false;
 		}

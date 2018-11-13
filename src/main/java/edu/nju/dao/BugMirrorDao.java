@@ -40,13 +40,15 @@ public class BugMirrorDao {
 	
 	public List<BugMirror> findValid(String case_take_id) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("flag").is(true));
+//		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("flag").is(true));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
 	public List<String> findByReport(String report_id) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("report_id").is(report_id).and("flag").is(true));
+//		query.addCriteria(Criteria.where("report_id").is(report_id).and("flag").is(true));
+		query.addCriteria(Criteria.where("report_id").is(report_id));
 		List<BugMirror> lists = mongoOperations.find(query, BugMirror.class);
 		List<String> result = new ArrayList<String>();
 		for(BugMirror mirror : lists) {
@@ -63,25 +65,29 @@ public class BugMirrorDao {
 	
 	public List<BugMirror> findByCase(String case_take_id, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("report_id").nin(report_id));
+//		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("report_id").nin(report_id));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
 	public List<BugMirror> findByCategory(String case_take_id, String bug_category, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("bug_category").is(bug_category).and("report_id").nin(report_id));
+//		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("bug_category").is(bug_category).and("report_id").nin(report_id));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("bug_category").is(bug_category));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
 	public List<BugMirror> findBySeverity(String case_take_id, int severity, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity).and("report_id").nin(report_id));
+//		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity).and("report_id").nin(report_id));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("severity").is(severity));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
 	public List<BugMirror> findByRecurrent(String case_take_id, int recurrent, String report_id){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent).and("report_id").nin(report_id));
+//		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent).and("report_id").nin(report_id));
+		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("recurrent").is(recurrent));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
@@ -95,7 +101,8 @@ public class BugMirrorDao {
 	public List<BugMirror> findByIds(List<String> ids, String report_id){
 		if(ids == null || ids.size() == 0) {return new ArrayList<BugMirror>();}
 		Query query = new Query();
-		query.addCriteria(Criteria.where("_id").in(ids).and("report_id").nin(report_id));
+//		query.addCriteria(Criteria.where("_id").in(ids).and("report_id").nin(report_id));
+		query.addCriteria(Criteria.where("_id").in(ids));
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
@@ -126,12 +133,32 @@ public class BugMirrorDao {
 		mongoOperations.updateFirst(query,update,BugMirror.class);
 	}
 	
+	public void cancelGood(String id, String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		Update update = new Update();
+		Set<String> good = mongoOperations.find(query, BugMirror.class).get(0).getGood();
+		if(good.contains(report_id)) { good.remove(report_id); }
+		update.set("good", good);
+		mongoOperations.updateFirst(query,update,BugMirror.class);
+	}
+	
 	public void bad(String id, String report_id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
 		Update update = new Update();
 		Set<String> bad = mongoOperations.find(query, BugMirror.class).get(0).getBad();
 		bad.add(report_id);
+		update.set("bad", bad);
+		mongoOperations.updateFirst(query,update,BugMirror.class);
+	}
+	
+	public void canelBad(String id, String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+		Update update = new Update();
+		Set<String> bad = mongoOperations.find(query, BugMirror.class).get(0).getBad();
+		if(bad.contains(report_id)) { bad.remove(report_id); }
 		update.set("bad", bad);
 		mongoOperations.updateFirst(query,update,BugMirror.class);
 	}

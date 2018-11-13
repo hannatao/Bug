@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
+import edu.nju.dao.BugPageDao;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
+import edu.nju.entities.BugPage;
 
 @Service
 public class HistoryService {
@@ -22,6 +24,9 @@ public class HistoryService {
 	
 	@Autowired
 	BugMirrorDao mirrordao;
+	
+	@Autowired
+	BugPageDao pagedao;
 	
 	@Autowired
 	RecommendService recservice;
@@ -67,6 +72,14 @@ public class HistoryService {
 		return historydao.findRoots(aservice.getValid(case_take_id));
 	}
 	
+	public List<String> getTreeRoots(String case_take_id) {
+		List<String> all = new ArrayList<String>();
+		for(String id : getRoots(case_take_id)) {
+			if(getHistory(id).getChildren().size() > 0) { all.add(id); }
+		}
+		return all;
+	}
+	
 	public List<String> getInvalid(Set<String> ids) {
 		List<String> result = new ArrayList<String>();
 		for(String id: ids) {
@@ -93,6 +106,7 @@ public class HistoryService {
 		return set;
 	}
 	
+	//获取评分时树的信息
 	public List<String> getDetail(String id) {
 		List<String> result = new ArrayList<String>();
 		List<List<String>> paths = getDepth(id);
@@ -130,7 +144,28 @@ public class HistoryService {
 		result.add(Integer.toString(max_height));
 		result.add(Integer.toString(count));
 		result.add(flag);
+		result.add(recservice.getTitle(id));
 		return result;
+	}
+	
+	public void pageFilter(List<String> all, String page) {
+		if(page.equals("null")) { return; }
+		List<BugPage> mirrors = pagedao.findByIds(all);
+		String[] pages = page.split("-");
+		for(BugPage mirror : mirrors) {
+			if(pages.length > 0 && !mirror.getPage1().equals(pages[0])) {
+				all.remove(mirror.getId());
+				continue;
+			}
+			if(pages.length > 1 && !mirror.getPage2().equals(pages[1])) {
+				all.remove(mirror.getId());
+				continue;
+			}
+			if(pages.length > 2 && !mirror.getPage3().equals(pages[2])) {
+				all.remove(mirror.getId());
+				continue;
+			}
+		}
 	}
 	
 	public List<List<String>> getDepth(String id) {

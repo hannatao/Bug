@@ -1,10 +1,15 @@
 package edu.nju.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,7 @@ import edu.nju.dao.BugScoreDao;
 import edu.nju.dao.CTBDao;
 import edu.nju.dao.ThumsUpDao;
 import edu.nju.entities.Bug;
+import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugScore;
 import edu.nju.entities.ThumsUp;
 
@@ -39,6 +45,12 @@ public class ReportService {
 	@Autowired
 	ThumsUpDao tdao;
 	
+	@Autowired
+	AnalyzeService aservice;
+	
+	@Autowired
+	HistoryService hservice;
+	
 	public List<String> getUserBugs(String report_id) {
 		return mdao.findByReport(report_id);
 	}
@@ -58,7 +70,7 @@ public class ReportService {
 		List<BugScore> bugscore = bsdao.findByIds(ids);
 		int count = 0;
 		for(BugScore bs: bugscore) {
-			if(bs.getGrade() == 1 || bs.getGrade() == 2) {count ++;}
+			if(bs.getGrade() >= 8) {count ++;}
 		}
 		return count;
 	}
@@ -89,7 +101,7 @@ public class ReportService {
 		int count = 0;
 		for(String id: thums) {
 			BugScore bs = bsdao.findById(id);
-			if(bs.getGrade() == 1 || bs.getGrade() == 2) {count ++;}
+			if(bs.getGrade() >= 8) {count ++;}
 		}
 		return count;
 	}
@@ -100,9 +112,70 @@ public class ReportService {
 		int count = 0;
 		for(String id: diss) {
 			BugScore bs = bsdao.findById(id);
-			if(bs.getGrade() == 3) {count ++;}
+			if(bs.getGrade() <= 2) {count ++;}
 		}
 		return count;
+	}
+	
+	public List<Entry<String, Integer>> getThumsRank(String case_take_id) {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		List<String> reports = aservice.getReports(case_take_id);
+		for(String report : reports) {
+			Set<String> thums = getAllThums(report);
+			if(thums != null && thums.size() != 0) { result.put(report, thums.size()); }
+		}
+		List<Entry<String, Integer>> map_list = new ArrayList<>(result.entrySet());
+		Collections.sort(map_list, (a, b) -> (b.getValue() - a.getValue()));
+		return map_list;
+	}
+	
+	public List<Entry<String, Integer>> getForkRank(String case_take_id) {
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		List<String> list = aservice.getValid(case_take_id);
+		for(String id : list) {
+			BugHistory history = hdao.findByid(id);
+			if(history == null) { continue; }
+			if(!history.getParent().equals("null")) { 
+				String key = bdao.findByid(id).getReport_id();
+				result.put(key, result.getOrDefault(key, 0) + 1);
+			}
+		}
+		List<Entry<String, Integer>> map_list = new ArrayList<>(result.entrySet());
+		Collections.sort(map_list, (a, b) -> (b.getValue() - a.getValue()));
+		return map_list;
+	}
+	
+	public List<JSONObject> relations(String case_take_id) {
+		List<JSONObject> result = new ArrayList<JSONObject>();
+		List<String> trees = hservice.getTreeRoots(case_take_id);
+		Set<String> reports = new HashSet<String>();
+		List<List<String>> links = new ArrayList<List<String>>();
+		
+		JSONObject tree_nodes = new JSONObject();
+		JSONObject report_nodes = new JSONObject();
+		JSONObject link = new JSONObject();
+		
+		
+		for(String tree: trees) {
+			for(List<String> path : hservice.getDepth(tree)) {
+				for(String id: path) {
+					String report = bdao.findByid(id).getReport_id();
+					reports.add(report);
+					List<String> temp = new ArrayList<String>();
+					temp.add(report);
+					temp.add(tree);
+					links.add(temp);
+				}
+			}
+		}
+		
+		tree_nodes.put("TreeNode", trees);
+		report_nodes.put("PersonNode", reports);
+		link.put("Link", links);
+		result.add(tree_nodes);
+		result.add(report_nodes);
+		result.add(link);
+		return result;
 	}
 	
 }

@@ -27,7 +27,9 @@ public class BugHistoryDao {
 	public BugHistory findByid(String id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		return mongoOps.find(query,BugHistory.class).get(0);
+		List<BugHistory> history = mongoOps.find(query,BugHistory.class);
+		if(history != null && history.size() != 0) { return history.get(0); }
+		else { return null; }
 	}
 	
 	//查找所有指定的根

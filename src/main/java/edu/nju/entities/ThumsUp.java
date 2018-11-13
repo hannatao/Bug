@@ -15,7 +15,7 @@ public class ThumsUp implements java.io.Serializable{
 	private static final long serialVersionUID = -17882697895537936L;
 	
 	@Id
-    private String id;
+    private String id; //即report_id
 	
 	Set<String> thums;
 	
