@@ -38,7 +38,6 @@ public class ReportController {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -48,11 +47,11 @@ public class ReportController {
 	public void ThumsRank(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
+			response.setContentType("text/html; charset=utf-8");
 			out.print(rservice.getThumsRank(case_take_id));
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -66,7 +65,6 @@ public class ReportController {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -80,7 +78,32 @@ public class ReportController {
 			out.flush();
 			out.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/keyWords")
+	@ResponseBody
+	public void keyWords(String id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(rservice.keyWords(id));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/charm")
+	@ResponseBody
+	public void charm(String case_take_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(rservice.charm(case_take_id));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

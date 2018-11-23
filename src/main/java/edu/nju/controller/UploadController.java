@@ -30,7 +30,7 @@ public class UploadController {
 	//上传新的Bug报告
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	@ResponseBody
-	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String case_id, HttpServletResponse response) {
+	public void submit(String id, String useCase, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String title, String report_id, String parent, String page, String case_id, String worker_id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
 		boolean flag = true;
 		if(!useCase.equals("null")) {flag = ctbservice.save(useCase, id, case_take_id, report_id);}
@@ -39,6 +39,7 @@ public class UploadController {
 		else {result.put("status", "500");}
 		try {
 			PrintWriter out = response.getWriter();
+			saveservice.saveStu(report_id, worker_id);
 			out.print(result);
 			out.flush();
 			out.close();
@@ -139,6 +140,73 @@ public class UploadController {
 		} else {
 			result.put("status", "500");
 		}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/repair", method = RequestMethod.POST)
+	@ResponseBody
+	public void repair(String id, String page, String case_take_id, String bug_category, String description, String img_url, String severity, String recurrent, String report_id, String case_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.repair(id, page, case_take_id, bug_category, description, img_url, severity, recurrent, report_id, case_id)) {
+			result.put("status", "200");
+		} else {
+			result.put("status", "500");
+		}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/title", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveTitle(String id, String title, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.saveTitle(id, title)) { result.put("status", "200"); }
+		else { result.put("status", "500"); }
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/thums")
+	@ResponseBody
+	public void repairThums(String case_take_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.repairThums(case_take_id)) { result.put("status", "200"); }
+		else { result.put("status", "500"); }
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/time")
+	@ResponseBody
+	public void repairTime(String case_take_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(saveservice.repairTime(case_take_id)) { result.put("status", "200"); }
+		else { result.put("status", "500"); }
 		try {
 			PrintWriter out = response.getWriter();
 			out.print(result);

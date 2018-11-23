@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.nju.entities.Bug;
 import edu.nju.entities.BugMirror;
 import edu.nju.service.HistoryService;
 import edu.nju.service.RecommendService;
@@ -87,9 +88,12 @@ public class RecommendController {
 	public void getDetail(String id, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
 		try {
-			result.put("detail", new JSONObject(recservice.getDetail(id)));
-			result.put("history", new JSONObject(historyservice.getHistory(id)));
-			result.put("mirror", new JSONObject(recservice.getMirror(id)));
+			Bug bug = recservice.getDetail(id);
+			if(bug != null) {
+				result.put("detail", new JSONObject(bug));
+				result.put("history", new JSONObject(historyservice.getHistory(id)));
+				result.put("mirror", new JSONObject(recservice.getMirror(id)));
+			}
 			PrintWriter out = response.getWriter();
 			out.print(result);
 			out.flush();

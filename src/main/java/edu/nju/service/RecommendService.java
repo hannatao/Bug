@@ -83,6 +83,7 @@ public class RecommendService {
 			session.setAttribute("path", map);
 		} else {
 			Map<String, String> map = (Map<String, String>)session.getAttribute("path");
+			if(map == null) { map = new LinkedHashMap<String, String>(); }
 			if(map.containsKey(type)) {
 				return pathExist(case_take_id, type, content, session, map);
 			}

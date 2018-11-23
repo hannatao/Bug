@@ -101,4 +101,15 @@ public class DeleteService {
 			return false;
 		}
 	}
+	
+	public boolean updateCaseTake(String report_id, String case_take_id) {
+		try {
+			mirrordao.update_case_take(report_id, case_take_id);
+			bugdao.update_case_take(report_id, case_take_id);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

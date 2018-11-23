@@ -73,7 +73,7 @@ public class AnalyzeController {
 	public void getScores(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONObject(aservice.getScores(case_take_id)));
+			out.print(aservice.getScores(case_take_id));
 			out.flush();
 			out.close();
 		} catch (Exception e) {

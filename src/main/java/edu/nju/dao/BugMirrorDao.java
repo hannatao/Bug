@@ -28,7 +28,7 @@ public class BugMirrorDao {
 	public void remove(String id){
 	    Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
-	    mongoOperations.remove(query,BugMirror.class);
+	    mongoOperations.remove(query);
 	}
 	
 	//根据ids删除文档
@@ -106,10 +106,18 @@ public class BugMirrorDao {
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
+//	public BugMirror findById(String id){
+//		Query query = new Query();
+//		query.addCriteria(Criteria.where("_id").is(id));
+//		return mongoOperations.find(query, BugMirror.class).get(0);
+//	}
+	
 	public BugMirror findById(String id){
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		return mongoOperations.find(query, BugMirror.class).get(0);
+		List<BugMirror> mirror = mongoOperations.find(query, BugMirror.class);
+		if(mirror != null && mirror.size() > 0) { return mirror.get(0); }
+		else { return null; }
 	}
 	
 	public boolean haveJudged(String id, String report_id) {
@@ -161,5 +169,15 @@ public class BugMirrorDao {
 		if(bad.contains(report_id)) { bad.remove(report_id); }
 		update.set("bad", bad);
 		mongoOperations.updateFirst(query,update,BugMirror.class);
+	}
+	
+	public void update_case_take(String report_id,String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("report_id").is(report_id));
+		List<BugMirror> list = mongoOperations.find(query, BugMirror.class);
+		for(BugMirror mirror : list) {
+			mirror.setCase_take_id(case_take_id);
+			mongoOperations.save(mirror);
+		}
 	}
 }

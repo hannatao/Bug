@@ -32,7 +32,7 @@ public class BugDao {
 	public void remove(String id){
 	    Query query = new Query();
 	    query.addCriteria(Criteria.where("_id").is(id));
-	    mongoOperations.remove(query,Bug.class);
+	    mongoOperations.remove(query);
 	}
 	
 	//根据ids删除文档
@@ -78,5 +78,14 @@ public class BugDao {
 	    query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
 	    return mongoOperations.find(query,Bug.class);
 	}
-
+	
+	public void update_case_take(String report_id,String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("report_id").is(report_id));
+		List<Bug> list = mongoOperations.find(query, Bug.class);
+		for(Bug mirror : list) {
+			mirror.setCase_take_id(case_take_id);
+			mongoOperations.save(mirror);
+		}
+	}
 }

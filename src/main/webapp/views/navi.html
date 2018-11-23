@@ -1,0 +1,75 @@
+<%@ page pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+
+<style type="text/css">
+/* .navbar .navbar-nav > li > a {
+    color: #000;
+    font-size: 20px;
+} */
+</style>
+
+	<meta charset="utf-8">
+    <title>导航栏</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+	<div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/Bug/views/score2.jsp">众包数据分析</a>
+    </div>
+    <div>
+        <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="/Bug/views/score2.jsp" class="dropdown-toggle" data-toggle="dropdown">
+                    	Bug报告<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Bug/views/score2.jsp">得分散点图</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/score.jsp">得分三维图</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/thums-score2.jsp">点赞数与得分</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/usecase-bug.jsp">用例与Bug数目</a></li>
+                     <li class="divider"></li>
+                    <li><a href="/Bug/views/bug-fork-graph2.jsp">Bug报告Fork关系图</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/fork-type.jsp">两种Fork对比</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    	测试人员<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Bug/views/thums-bug-graph.jsp">点赞关系图</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/people-fork-graph2.jsp">Fork关系图</a></li>
+                     <li class="divider"></li>
+                     <li><a href="/Bug/views/thums-bugs2.jsp">被点赞与Bug数目</a></li>
+                </ul>
+            </li>
+  			<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    	展示<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Bug/views/relationShow2.jsp">测试者与Bug树</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/Bug/views/show2.jsp">排行榜</a></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+	</div>
+</nav>
+
+</body>
+</html>

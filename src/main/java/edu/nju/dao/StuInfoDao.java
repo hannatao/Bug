@@ -16,8 +16,8 @@ public class StuInfoDao {
 	@Autowired
 	private MongoOperations mongoOperations;
 	
-	public void save(String report_id, String stu_id) {
-		mongoOperations.save(new StuInfo(report_id, stu_id));
+	public void save(String report_id, String stu_id, String name) {
+		mongoOperations.save(new StuInfo(report_id, stu_id, name));
 	}
 	
 	public String findById(String report_id) {
@@ -25,6 +25,6 @@ public class StuInfoDao {
 	    query.addCriteria(Criteria.where("_id").is(report_id));
 	    List<StuInfo> stu_info = mongoOperations.find(query, StuInfo.class);
 	    if(stu_info == null || stu_info.size() == 0) { return "null"; }
-	    else { return stu_info.get(0).getWorker_id(); }
+	    else { return stu_info.get(0).getName(); }
 	}
 }

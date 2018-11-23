@@ -23,7 +23,9 @@ public class KWDao {
 	public KeyWords findById(String id) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("_id").is(id));
-		return mongoOperations.find(query, KeyWords.class).get(0);
+		List<KeyWords> keywords = mongoOperations.find(query, KeyWords.class);
+		if(keywords != null && keywords.size() != 0) { return keywords.get(0); }
+		else { return null; }
 	}
 	
 	public void remove(String id){

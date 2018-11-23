@@ -66,4 +66,20 @@ public class DeleteController {
 			e.printStackTrace();
 		}
 	}
+	
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public void update_case_take(String report_id, String case_take_id, HttpServletResponse response) {
+		JSONObject result = new JSONObject();
+		if(deleteservice.updateCaseTake(report_id, case_take_id)) {result.put("status", "200");}
+		else {result.put("status", "500");}
+		try {
+			PrintWriter out = response.getWriter();
+			out.print(result);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

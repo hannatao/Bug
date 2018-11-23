@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import edu.nju.dao.BugHistoryDao;
 import edu.nju.dao.BugMirrorDao;
 import edu.nju.dao.BugScoreDao;
 import edu.nju.dao.CTBDao;
+import edu.nju.dao.StuInfoDao;
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugHistory;
 import edu.nju.entities.BugMirror;
@@ -33,6 +36,9 @@ public class AnalyzeService {
 	
 	@Autowired
 	BugMirrorDao mdao;
+	
+	@Autowired
+	StuInfoDao studao;
 	
 	@Autowired
 	BugDao bdao;
@@ -124,10 +130,12 @@ public class AnalyzeService {
 		return mark;
 	}
 	
-	public Map<String, Integer> getScores(String case_take_id) {
+	public JSONArray getScores(String case_take_id) {
 		Map<String, Integer> result = new HashMap<String, Integer>(); //用户得分
 		Map<String, Integer> grades = new HashMap<String, Integer>(); //专家评价分
 		Map<String, Integer> scores = new HashMap<String, Integer>(); //计算bug得分
+		JSONArray json = new JSONArray();
+		
 		List<String> bugs = getValid(case_take_id);
 		for(String bug: bugs) {
 			BugScore temp = bsdao.findById(bug);
@@ -148,19 +156,27 @@ public class AnalyzeService {
 			BugMirror mirror = mdao.findById(bug);
 			if(mirror == null) { continue; }
 			int grade = grades.getOrDefault(bug, 0);
-			if(grade >= 8) { ThumsUp(1, result, mirror); }
-			if(grade <= 2) { ThumsUp(-1, result, mirror); }
+			if(grade > 0) { ThumsUp(1, result, mirror); }
+			if(grade == 0) { ThumsUp(-1, result, mirror); }
 		}
 		for(Map.Entry<String, Integer> entry : result.entrySet()) {
-			if(entry.getValue() > 10) { result.put(entry.getKey(), 10); }
+			if(entry.getValue() > 20) { result.put(entry.getKey(), 20); }
 			if(entry.getValue() < 0) { result.put(entry.getKey(), 0); }
 		}
+		Map<String, Integer> temp = new HashMap<String, Integer>();
 		for(String bug: bugs) {
 			BugMirror mirror = mdao.findById(bug);
 			if(mirror == null) { continue; }
-			result.put(mirror.getReport_id(), result.getOrDefault(mirror.getReport_id(), 0) + scores.getOrDefault(bug, 0));
+			temp.put(mirror.getReport_id(), scores.getOrDefault(bug, 0) + temp.getOrDefault(mirror.getReport_id(), 0));
 		}
-		return result;
+		for(Map.Entry<String, Integer> entry : temp.entrySet()) {
+			JSONObject json_temp = new JSONObject();
+			json_temp.put("名字", report_trans(entry.getKey()));
+			json_temp.put("报告得分", entry.getValue());
+			json_temp.put("审查得分", result.getOrDefault(entry.getKey(), 0));
+			json.put(json_temp);
+		}
+		return json;
 	}
 	
 	//计算点赞得分
@@ -246,5 +262,11 @@ public class AnalyzeService {
 				}
 			}
 		}
+	}
+	
+	private String report_trans(String report_id) {
+		String name = studao.findById(report_id);
+		if(name == null || name.equals("null")) { return report_id;}
+		return name;
 	}
 }

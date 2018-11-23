@@ -171,6 +171,7 @@ public class HistoryService {
 	public List<List<String>> getDepth(String id) {
 		BugHistory root = historydao.findByid(id);
 		List<List<String>> result = new ArrayList<List<String>>();
+		if(root == null) { return result;}
 		List<String> list = new ArrayList<String>();
 		list.add(root.getId());
 		dfs(root, result, list);

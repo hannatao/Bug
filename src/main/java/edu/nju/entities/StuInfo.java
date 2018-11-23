@@ -16,12 +16,14 @@ public class StuInfo implements java.io.Serializable{
     private String id;  //report_id
 	
 	private String worker_id;
+	
+	private String name;
 
 	@PersistenceConstructor
-	public StuInfo(String id, String worker_id) {
-		super();
+	public StuInfo(String id, String worker_id, String name) {
 		this.id = id;
 		this.worker_id = worker_id;
+		this.name = name;
 	}
 
 	public String getId() {
@@ -39,6 +41,13 @@ public class StuInfo implements java.io.Serializable{
 	public void setWorker_id(String worker_id) {
 		this.worker_id = worker_id;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }
