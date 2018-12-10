@@ -50,7 +50,7 @@ public class StringMatch {
         expectedNature.add("n");
         expectedNature.add("v");
         expectedNature.add("f");
-        expectedNature.add("en");
+//        expectedNature.add("en");
         StringBuilder result = new StringBuilder();
         List<Term> terms = ToAnalysis.parse(str).getTerms();
         for(Term term : terms) {

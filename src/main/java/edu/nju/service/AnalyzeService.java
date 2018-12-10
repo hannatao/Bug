@@ -202,12 +202,25 @@ public class AnalyzeService {
 	}
 	
 	public Map<String, Integer> getBugDetail(String case_take_id) {
-		Map<String, Integer> result = new HashMap<String, Integer>();
+		Map<String, Integer> page = new HashMap<String, Integer>();
 		List<String> bugs = getValid(case_take_id);
 		for(String id : bugs) {
 			Bug bug = bdao.findByid(id);
-			result.put(bug.getBug_page(), result.getOrDefault(bug.getBug_page(), 0) + 1);
+			page.put(bug.getBug_page(), page.getOrDefault(bug.getBug_page(), 0) + 1);
 		}
+		return page;
+	}
+	
+	public JSONObject getCaseDetail(String case_take_id) {
+		JSONObject result = new JSONObject();
+		Map<String, Integer> kind = new HashMap<String, Integer>();
+		List<String> bugs = getValid(case_take_id);
+		for(String id : bugs) {
+			Bug bug = bdao.findByid(id);
+			kind.put(bug.getBug_category(), kind.getOrDefault(bug.getBug_category(), 0) + 1);
+		}
+		result.put("page", new JSONObject(getBugDetail(case_take_id)));
+		result.put("category", new JSONObject(kind));
 		return result;
 	}
 	

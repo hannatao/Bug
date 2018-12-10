@@ -138,7 +138,7 @@ public class AnalyzeController {
 	public void getDetail(String case_take_id, HttpServletResponse response) {
 		try {
 			PrintWriter out = response.getWriter();
-			out.print(new JSONObject(aservice.getBugDetail(case_take_id)));
+			out.print(aservice.getCaseDetail(case_take_id));
 			out.flush();
 			out.close();
 		} catch (Exception e) {
