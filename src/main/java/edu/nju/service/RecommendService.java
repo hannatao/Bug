@@ -20,8 +20,8 @@ import edu.nju.dao.KWDao;
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugMirror;
 import edu.nju.entities.BugPage;
-import edu.nju.util.Algorithm;
-import edu.nju.util.Algorithm_1;
+//import edu.nju.util.Algorithm;
+//import edu.nju.util.Algorithm_1;
 import edu.nju.util.StringMatch;
 
 @Service
@@ -40,9 +40,10 @@ public class RecommendService {
 	KWDao kwdao;
 	
 	public List<BugMirror> getList (String case_take_id, String report_id) {
-		Algorithm algorithm = new Algorithm_1();
+//		Algorithm algorithm = new Algorithm_1();
 		List<BugMirror> results = mirrordao.findByCase(case_take_id, report_id);
-		return algorithm.sort(results);
+//		return algorithm.sort(results);
+		return results;
 	}
 	
 	public List<String> getListIds (String case_take_id) {
@@ -71,16 +72,50 @@ public class RecommendService {
 	}
 	
 	//根据bug的本质三属性进行推荐
+//	@SuppressWarnings("unchecked")
+//	public Map<BugMirror, Float> recommend (String case_take_id, String type, String content, boolean flag, HttpSession session) {
+//		
+//		List<BugMirror> results = new ArrayList<BugMirror>();
+//		
+//		if(session.getAttribute("rec") == null) {
+//			results = findByNothing(case_take_id, type, content, (String)session.getAttribute("report"));
+//			Map<String, String> map = new LinkedHashMap<String, String>();
+//			map.put(type, content);
+//			session.setAttribute("path", map);
+//		} else {
+//			Map<String, String> map = (Map<String, String>)session.getAttribute("path");
+//			if(map == null) { map = new LinkedHashMap<String, String>(); }
+//			if(map.containsKey(type)) {
+//				return pathExist(case_take_id, type, content, session, map);
+//			}
+//			map.put(type, content);
+//			session.setAttribute("path", map);
+//			results = findByNow(type, content, (List<BugMirror>) session.getAttribute("rec"));
+//		}
+//		
+//		session.setAttribute("rec", results);
+//		if(flag) {
+//			Algorithm algorithm = new Algorithm_1();
+//			if(results != null) {results = algorithm.sort(results);}
+//			if(session.getAttribute("title") != null) {return recommandByTitle((String)session.getAttribute("title"), session);}
+//			if(session.getAttribute("des") != null) {return recommandByDes((String)session.getAttribute("des"), session);}
+//		}
+//		
+//		Map<String, String> map = (Map<String, String>)session.getAttribute("path");
+//		return finalScore(results, map.size());
+//	}
+	
+	//根据bug的本质三属性进行推荐
 	@SuppressWarnings("unchecked")
 	public Map<BugMirror, Float> recommend (String case_take_id, String type, String content, boolean flag, HttpSession session) {
 		
 		List<BugMirror> results = new ArrayList<BugMirror>();
 		
 		if(session.getAttribute("rec") == null) {
-			results = findByNothing(case_take_id, type, content, (String)session.getAttribute("report"));
 			Map<String, String> map = new LinkedHashMap<String, String>();
 			map.put(type, content);
 			session.setAttribute("path", map);
+			results = getList(case_take_id, "test");
 		} else {
 			Map<String, String> map = (Map<String, String>)session.getAttribute("path");
 			if(map == null) { map = new LinkedHashMap<String, String>(); }
@@ -89,19 +124,16 @@ public class RecommendService {
 			}
 			map.put(type, content);
 			session.setAttribute("path", map);
-			results = findByNow(type, content, (List<BugMirror>) session.getAttribute("rec"));
+			results = (List<BugMirror>) session.getAttribute("rec");
 		}
-		
 		session.setAttribute("rec", results);
 		if(flag) {
-			Algorithm algorithm = new Algorithm_1();
-			if(results != null) {results = algorithm.sort(results);}
 			if(session.getAttribute("title") != null) {return recommandByTitle((String)session.getAttribute("title"), session);}
 			if(session.getAttribute("des") != null) {return recommandByDes((String)session.getAttribute("des"), session);}
 		}
 		
 		Map<String, String> map = (Map<String, String>)session.getAttribute("path");
-		return finalScore(results, map.size());
+		return finalScore(results, map);
 	}
 	
 	//根据页面进行推荐
@@ -133,14 +165,14 @@ public class RecommendService {
 		session.setAttribute("rec", mirrors);
 		
 		if(flag) {
-			Algorithm algorithm = new Algorithm_1();
-			if(mirrors != null) {mirrors = algorithm.sort(mirrors);}
+//			Algorithm algorithm = new Algorithm_1();
+//			if(mirrors != null) {mirrors = algorithm.sort(mirrors);}
 			if(session.getAttribute("title") != null) {return recommandByTitle((String)session.getAttribute("title"), session);}
 			if(session.getAttribute("des") != null) {return recommandByDes((String)session.getAttribute("des"), session);}
 		}
 		
 		Map<String, String> map = (Map<String, String>)session.getAttribute("path");
-		return finalScore(mirrors, map.size());
+		return finalScore(mirrors, map);
 	}
 	
 	//根据Title进行文本匹配
@@ -168,40 +200,40 @@ public class RecommendService {
 	}
 	
 	//从缓存中获取
-	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){
-		List<BugMirror> results = new ArrayList<BugMirror>();
-		switch(type) {
-			case "bug_category":
-				for(BugMirror mirror : lists) {
-					if(mirror.getBug_category().equals(content)) {results.add(mirror);}
-				}
-				break;
-			case "severity":
-				for(BugMirror mirror : lists) {
-					if(mirror.getSeverity() == severityTranse(content)) {results.add(mirror);}
-				}
-				break;
-			case "recurrent":
-				for(BugMirror mirror : lists) {
-					if(mirror.getRecurrent() == recurrentTranse(content)) {results.add(mirror);}
-				}
-				break;
-		}
-		return results;
-	}
+//	private List<BugMirror> findByNow(String type, String content, List<BugMirror> lists){
+//		List<BugMirror> results = new ArrayList<BugMirror>();
+//		switch(type) {
+//			case "bug_category":
+//				for(BugMirror mirror : lists) {
+//					if(mirror.getBug_category().equals(content)) {results.add(mirror);}
+//				}
+//				break;
+//			case "severity":
+//				for(BugMirror mirror : lists) {
+//					if(mirror.getSeverity() == severityTranse(content)) {results.add(mirror);}
+//				}
+//				break;
+//			case "recurrent":
+//				for(BugMirror mirror : lists) {
+//					if(mirror.getRecurrent() == recurrentTranse(content)) {results.add(mirror);}
+//				}
+//				break;
+//		}
+//		return results;
+//	}
 
 	//从数据库中获取
-	private List<BugMirror> findByNothing(String case_take_id, String type, String content, String report_id){
-		switch(type) {
-			case "bug_category":
-				return mirrordao.findByCategory(case_take_id, content, report_id);
-			case "severity":
-				return mirrordao.findBySeverity(case_take_id, severityTranse(content), report_id);
-			case "recurrent":
-				return mirrordao.findByRecurrent(case_take_id, recurrentTranse(content), report_id);
-		}
-		return null;
-	}
+//	private List<BugMirror> findByNothing(String case_take_id, String type, String content, String report_id){
+//		switch(type) {
+//			case "bug_category":
+//				return mirrordao.findByCategory(case_take_id, content, report_id);
+//			case "severity":
+//				return mirrordao.findBySeverity(case_take_id, severityTranse(content), report_id);
+//			case "recurrent":
+//				return mirrordao.findByRecurrent(case_take_id, recurrentTranse(content), report_id);
+//		}
+//		return null;
+//	}
 	
 	//从数据库中查找页面
 	private List<BugPage> findPages(String case_take_id, String type, String content){
@@ -271,15 +303,15 @@ public class RecommendService {
 		session.removeAttribute("page");
 		Map<BugMirror, Float> results = new LinkedHashMap<BugMirror, Float>();
 		for(Entry<String, String> entry: map.entrySet()) {
-			if(entry.getKey().equals(type)) {break;}
-			if(!entry.getKey().contains("page")) {
-				results = recommend(case_take_id, entry.getKey(), entry.getValue(), false, session);
+			if(entry.getKey().equals(type)) { continue; }
+			if(entry.getKey().contains("page")) {
+				recommndByPage(case_take_id, entry.getKey(), entry.getValue(), false, session);
 			} else {
-				results = recommndByPage(case_take_id, entry.getKey(), entry.getValue(), false, session);
+				recommend(case_take_id, entry.getKey(), entry.getValue(), false, session);
 			}
 		}
-		if(!type.contains("page")) {results = recommend(case_take_id, type, content, true, session);}
-		else {results = recommndByPage(case_take_id, type, content, true, session);}
+		if(type.contains("page")) { results = recommndByPage(case_take_id, type, content, true, session); }
+		else { results = recommend(case_take_id, type, content, true, session); }
 		return results;
 	}
 	
@@ -291,7 +323,7 @@ public class RecommendService {
 		Map<String, BugMirror> bmap = new HashMap<String, BugMirror>();
 		Map<String, String> titleMap = new HashMap<String, String>();
 		Map<String, String> desMap = new HashMap<String, String>();
-		int size = 0;
+		Map<String, String> pmap = null;
 		
 		for(BugMirror mirror: lists) {
 			String id = mirror.getId();
@@ -315,29 +347,56 @@ public class RecommendService {
 			}
 			tmap.put(mirror, score);
 		}
-		List<Entry<BugMirror, Float>> tlist = new ArrayList<Entry<BugMirror, Float>>();
-		tlist.addAll(tmap.entrySet());
+		List<Entry<BugMirror, Float>> tlist = new ArrayList<Entry<BugMirror, Float>>(tmap.entrySet());
 		Collections.sort(tlist, (a, b) -> (Float.compare(b.getValue(), a.getValue())));
 		if(session.getAttribute("path") != null) {
-			Map<String, String> pmap = (Map<String, String>)session.getAttribute("path");
-			size = pmap.size();
+			pmap = (Map<String, String>)session.getAttribute("path");
 		}
 		
 		for(int i = 0; i < tlist.size() && i < 6; i ++) {
 			float score = (float) (tlist.get(i).getValue());
-			if(score <= 1) {continue;}
-			score += size * 5;
-			result.put(tlist.get(i).getKey(), score);
+			result.put(tlist.get(i).getKey(), score + categoryCount(tlist.get(i).getKey(), pmap));
+		}
+		tlist = new ArrayList<Entry<BugMirror, Float>>(result.entrySet());
+		Collections.sort(tlist, (a, b) -> (Float.compare(b.getValue(), a.getValue())));
+		result.clear();
+		for(Entry<BugMirror, Float> entry: tlist) {
+			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
 	}
 	
-	private Map<BugMirror, Float> finalScore(List<BugMirror> lists, int size) {
+	private Map<BugMirror, Float> finalScore(List<BugMirror> lists, Map<String, String> map) {
 		Map<BugMirror, Float> rmap = new LinkedHashMap<BugMirror, Float>();
 		for(BugMirror mirror : lists) {
-			rmap.put(mirror, (float) (size * 5));
+			rmap.put(mirror, categoryCount(mirror, map));
 		}
 		return rmap;
+	}
+	
+	private float categoryCount(BugMirror mirror, Map<String, String> map) {
+		if(map == null) { return 0;}
+		int score = 0;
+		int size = map.size();
+		for(Entry<String, String> entry : map.entrySet()) {
+			String type = entry.getKey();
+			String content = entry.getValue();
+			switch(type) {
+				case "bug_category":
+					size --;
+					if(content.equals(mirror.getBug_category())) { score ++; }
+					break;
+				case "severity":
+					size --;
+					if(severityTranse(content) == mirror.getSeverity()) { score ++; }
+					break;
+				case "recurrent":
+					size --;
+					if(recurrentTranse(content) == mirror.getRecurrent()) { score ++; }
+					break;
+			}		
+		}
+		return (float) ((score + size) / map.size()) * 30;
 	}
 	
 	private int severityTranse(String str) {

@@ -45,16 +45,23 @@ public class BugMirrorDao {
 		return mongoOperations.find(query, BugMirror.class);
 	}
 	
-	public List<String> findByReport(String report_id) {
+	public List<String> findIdsByReport(String report_id, String case_take_id) {
 		Query query = new Query();
 //		query.addCriteria(Criteria.where("report_id").is(report_id).and("flag").is(true));
-		query.addCriteria(Criteria.where("report_id").is(report_id));
+		query.addCriteria(Criteria.where("report_id").is(report_id).and("case_take_id").is(case_take_id));
 		List<BugMirror> lists = mongoOperations.find(query, BugMirror.class);
 		List<String> result = new ArrayList<String>();
 		for(BugMirror mirror : lists) {
 			result.add(mirror.getId());
 		}
 		return result;
+	}
+	
+	public List<BugMirror> findByReport(String report_id, String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("report_id").is(report_id).and("case_take_id").is(case_take_id));
+		List<BugMirror> lists = mongoOperations.find(query, BugMirror.class);
+		return lists;
 	}
 	
 	public List<BugMirror> findByCase(String case_take_id){

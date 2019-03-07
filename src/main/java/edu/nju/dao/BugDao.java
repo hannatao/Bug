@@ -54,6 +54,12 @@ public class BugDao {
 	    return result;
 	}
 	
+	public List<Bug> findByReport(String report_id, String case_take_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("report_id").is(report_id).and("case_take_id").is(case_take_id));
+		return mongoOperations.find(query,Bug.class);
+	}
+	
 	//根据id更新文档
 	public int update(Bug bug){
 	    Query query = new Query();
@@ -73,10 +79,19 @@ public class BugDao {
 	}
 	
 	//case条件查询，find查询所有
-	public List<Bug> findByCaseid(String case_take_id){
+	public List<Bug> findByCaseid(String case_take_id) {
 	    Query query = new Query();
 	    query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
 	    return mongoOperations.find(query,Bug.class);
+	}
+	
+	public List<String> findByCase(String case_take_id) {
+		Query query = new Query();
+	    query.addCriteria(Criteria.where("case_take_id").is(case_take_id));
+	    List<String> result = new ArrayList<String>();
+	    List<Bug> bugs = mongoOperations.find(query,Bug.class);
+	    if(bugs != null) { for(Bug bug : bugs) { result.add(bug.getId()); } }
+	    return result;
 	}
 	
 	public void update_case_take(String report_id,String case_take_id) {

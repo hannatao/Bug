@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.nju.entities.Bug;
 import edu.nju.entities.BugMirror;
+import edu.nju.service.DivRecService;
 import edu.nju.service.HistoryService;
 import edu.nju.service.RecommendService;
 import edu.nju.service.UserBasedService;
@@ -39,6 +40,9 @@ public class RecommendController {
 	
 	@Autowired
 	UserBasedService ubservice;
+	
+	@Autowired
+	DivRecService divservice;
 	
 	/**
 	 * 每次刷新或进入填写页面，都应该调用一次该方法，因为其中包含了一些初始化操作
@@ -141,8 +145,8 @@ public class RecommendController {
 //				}
 //				mirror2.addAll(ubservice.UserBased(reports.toArray(new String[reports.size()])));
 			}
-			mirror2.addAll(historyservice.getNew(case_take_id, (String)session.getAttribute("report")));
-			filter(mirror2, mirror1);
+//			mirror2.addAll(historyservice.getNew(case_take_id, (String)session.getAttribute("report")));
+//			filter(mirror2, mirror1);
 			result.put("same", new JSONArray(mirror1));
 			result.put("scores", new JSONArray(scores));
 			result.put("new", new JSONArray(mirror2));
@@ -151,6 +155,19 @@ public class RecommendController {
 			out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping(value = "/diversity")
+	@ResponseBody
+	public void diversityRec(String case_take_id, String report_id, HttpServletResponse response) {
+		try {
+			PrintWriter out = response.getWriter();
+			out.println(new JSONArray(divservice.diverseRec(report_id, case_take_id)));
+			out.flush();
+			out.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

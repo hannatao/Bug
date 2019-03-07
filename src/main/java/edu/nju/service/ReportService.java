@@ -61,13 +61,13 @@ public class ReportService {
 	@Autowired
 	HistoryService hservice;
 	
-	public List<String> getUserBugs(String report_id) {
-		return mdao.findByReport(report_id);
+	public List<String> getUserBugs(String report_id, String case_take_id) {
+		return mdao.findIdsByReport(report_id, case_take_id);
 	}
 	
-	public Map<String, Integer> getUserPath(String report_id) {
+	public Map<String, Integer> getUserPath(String report_id, String case_take_id) {
 		Map<String, Integer> result = new HashMap<String, Integer>();
-		List<String> ids = getUserBugs(report_id);
+		List<String> ids = getUserBugs(report_id, case_take_id);
 		for(String id: ids) {
 			Bug bug = bdao.findByid(id);
 			result.put(bug.getBug_page(), result.getOrDefault(bug.getBug_page(), 0) + 1);
@@ -75,8 +75,8 @@ public class ReportService {
 		return result;
 	}
 	
-	public int getValid(String report_id) {
-		List<String> ids = getUserBugs(report_id);
+	public int getValid(String report_id, String case_take_id) {
+		List<String> ids = getUserBugs(report_id, case_take_id);
 		List<BugScore> bugscore = bsdao.findByIds(ids);
 		int count = 0;
 		for(BugScore bs: bugscore) {
@@ -85,8 +85,8 @@ public class ReportService {
 		return count;
 	}
 	
-	public double getTimeGap(String report_id) {
-		List<String> ids = getUserBugs(report_id);
+	public double getTimeGap(String report_id, String case_take_id) {
+		List<String> ids = getUserBugs(report_id, case_take_id);
 		if(ids.size() <= 1) {return 0;}
 		Bug start = bdao.findByid(ids.get(0));
 		Bug end = bdao.findByid(ids.get(ids.size() - 1));

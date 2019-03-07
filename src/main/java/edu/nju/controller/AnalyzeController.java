@@ -193,7 +193,7 @@ public class AnalyzeController {
 			PrintWriter out = response.getWriter();
 			JSONObject result = new JSONObject();
 			result.put("all", filter(aservice.getBugDetail(case_take_id)));
-			result.put("self", filter(rservice.getUserPath(report_id)));
+			result.put("self", filter(rservice.getUserPath(report_id, case_take_id)));
 			out.print(result);
 			out.flush();
 			out.close();

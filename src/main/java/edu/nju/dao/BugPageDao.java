@@ -66,4 +66,5 @@ public class BugPageDao {
 		query.addCriteria(Criteria.where("case_take_id").is(case_take_id).and("page3").is(page3));
 		return mongoOperations.find(query,BugPage.class);
 	}
+	
 }

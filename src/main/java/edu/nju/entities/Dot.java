@@ -5,7 +5,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Dot implements java.io.Serializable{
+public class Dot implements java.io.Serializable {
 	
 	/**
 	 * 
