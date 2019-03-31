@@ -396,7 +396,7 @@ public class RecommendService {
 					break;
 			}		
 		}
-		return (float) ((score + size) / map.size()) * 30;
+		return (float) ((score + size) * 5);
 	}
 	
 	private int severityTranse(String str) {
