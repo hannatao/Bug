@@ -46,6 +46,9 @@ public class AnalyzeService {
 	@Autowired
 	HistoryService hservice;
 	
+	@Autowired
+	HttpService http;
+	
 	//获取所有bug
 	public List<String> getValid(String case_take_id) {
 		List<String> result = new ArrayList<String>();
@@ -171,11 +174,14 @@ public class AnalyzeService {
 		}
 		for(Map.Entry<String, Integer> entry : temp.entrySet()) {
 			JSONObject json_temp = new JSONObject();
+			json_temp.put("report_id", entry.getKey());
+			json_temp.put("worker_id", findWorkerId(entry.getKey()));
 			json_temp.put("名字", report_trans(entry.getKey()));
 			json_temp.put("报告得分", entry.getValue());
 			json_temp.put("审查得分", result.getOrDefault(entry.getKey(), 0));
 			json.put(json_temp);
 		}
+		writeScores(case_take_id, json);
 		return json;
 	}
 	
@@ -281,5 +287,27 @@ public class AnalyzeService {
 		String name = studao.findById(report_id);
 		if(name == null || name.equals("null")) { return report_id;}
 		return name;
+	}
+	
+	private String findWorkerId(String report_id) {
+		String workerId = studao.findWorkerId(report_id);
+		if(workerId == null || workerId.equals("null")) { return "";}
+		return workerId;
+	}
+	
+	private void writeScores(String case_take_id, JSONArray array) {
+		String host = "http://www.mooctest.net";
+		String url = "/api/common/uploadCaseScore";
+		String[] ids = case_take_id.split("-");
+		String param1 = "caseId=" + ids[0] + "&examId=" + ids[1];
+		for(int i = 0; i < array.length(); i ++) {
+			JSONObject json = (JSONObject)array.get(i);
+			String worker_id = json.get("worker_id").toString();
+			int score = Integer.parseInt(json.get("报告得分").toString()) + Integer.parseInt(json.get("审查得分").toString());
+			if(score <= 0 || worker_id.equals("")) { continue; }
+			if(score > 100) { score = 100; }
+			String param2 = "&userId=" + worker_id + "&score=" + score;
+			http.sendPut(host, url, param1 + param2);
+		}
 	}
 }

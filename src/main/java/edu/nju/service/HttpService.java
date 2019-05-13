@@ -118,4 +118,31 @@ public class HttpService {
         if(inputStream != null) { inputStream.close(); }
         System.out.println("info:" + url + " download success");
     }
+    
+    public boolean sendPut(String host, String url, String param) {
+        try {
+            String urlNameString = host + url + "?" + param;
+            URL realUrl = new URL(urlNameString);
+            // 打开和URL之间的连接
+            HttpURLConnection connection;
+            connection = (HttpURLConnection)realUrl.openConnection();
+            // 设置通用的请求属性
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Host", host);
+            connection.setRequestProperty("Accept", "*/*");
+//            connection.setRequestProperty("Content-Type", " application/json");
+//            connection.setRequestProperty("connection", "Keep-Alive");
+            connection.setRequestProperty("User-agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 建立实际的连接
+            connection.connect();
+            return true;
+        } catch (Exception e) {
+            System.out.println("发送PUT请求出现异常！" + e);
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

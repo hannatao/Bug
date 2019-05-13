@@ -53,9 +53,9 @@ public class ExtraService {
 	
 	
 	//测试报告相关
-	public String saveReport(String case_id, String task_id, String case_take_id, String woker_id, String device_model, 
+	public String saveReport(String case_id, String task_id, String case_take_id, String woker_id, String name, String device_model, 
 			String device_brand, String device_os, String script_location, String report_location, String log_location) {
-		Report report = new Report(case_id, task_id, case_take_id, woker_id, Long.toString(System.currentTimeMillis()),
+		Report report = new Report(case_id, task_id, case_take_id, woker_id, name, Long.toString(System.currentTimeMillis()),
 				device_model, device_brand, device_os, script_location, report_location, log_location);
 		return reportDao.save(report);
 	}

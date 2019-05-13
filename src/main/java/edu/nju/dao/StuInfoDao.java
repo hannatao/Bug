@@ -27,4 +27,12 @@ public class StuInfoDao {
 	    if(stu_info == null || stu_info.size() == 0) { return "null"; }
 	    else { return stu_info.get(0).getName(); }
 	}
+	
+	public String findWorkerId(String report_id) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(report_id));
+		List<StuInfo> stu_info = mongoOperations.find(query, StuInfo.class);
+		if(stu_info == null || stu_info.size() == 0) { return "null"; }
+		else { return stu_info.get(0).getWorker_id(); }
+	}
 }

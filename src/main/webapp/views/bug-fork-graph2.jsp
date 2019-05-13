@@ -14,7 +14,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
 	<title>众包协作概况</title>
@@ -51,7 +50,7 @@ function httpGetData(endTime){
 	         url : "http://47.99.140.117:8080/Bug/api/graph/22",
 	         type : "GET",
 	         dataType : "json", 
-	         data:{'case_take_id':"1489-2613",'time':endTime},
+	         data:{'case_take_id':"1632-2927",'time':endTime},
 	         success: function(response, status, xhr){
 	         		nodes = [];
 	         		links = [];

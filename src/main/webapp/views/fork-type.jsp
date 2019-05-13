@@ -14,7 +14,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
 	<title>众包协作概况</title>
@@ -35,7 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	         url : "http://47.99.140.117:8080/Bug/api/graph/31",
 	         type : "GET",
 	         dataType : "json", 
-	         data:{'case_take_id':"1489-2613"},
+	         data:{'case_take_id':"1632-2927"},
 	         success: function(response, status, xhr){
 	         /* {"thums_by_rec":26,"valid_by_rec":11,"valid_by_self":3,"fork_by_rec":26,"fork_by_self":6,"thums_by_self":5} */
 	         	sum = response["fork_by_rec"]+response["fork_by_self"];

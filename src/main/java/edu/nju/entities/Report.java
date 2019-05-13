@@ -25,6 +25,8 @@ public class Report implements java.io.Serializable {
 	
 	private String woker_id;
 	
+	private String name;
+	
 	private String create_time_millis;
 	
 	private String device_model;
@@ -40,10 +42,10 @@ public class Report implements java.io.Serializable {
 	private String log_location;
 
 	@PersistenceConstructor
-	public Report(String case_id, String task_id, String case_take_id, String woker_id, String create_time_millis,
+	public Report(String case_id, String task_id, String case_take_id, String woker_id, String name, String create_time_millis,
 			String device_model, String device_brand, String device_os, String script_location, String report_location,
 			String log_location) {
-		super();
+		this.name = name;
 		this.case_id = case_id;
 		this.task_id = task_id;
 		this.case_take_id = case_take_id;
@@ -151,6 +153,14 @@ public class Report implements java.io.Serializable {
 
 	public void setLog_location(String log_location) {
 		this.log_location = log_location;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	
